@@ -7,7 +7,7 @@ install-cmdline-core:
 
 install-cmdline-apps:
 	aptitude install irssi
-	aptitude install mutt notmuch offlineimap urlview w3m
+	aptitude install mutt msmtp notmuch offlineimap urlview w3m
 
 remove-x-annoyances:
 	aptitude purge unity-lens-shopping
