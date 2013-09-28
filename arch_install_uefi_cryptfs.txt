@@ -1,0 +1,209 @@
+Arch Linux Install with UEFI Boot & Full-disk Encryption
+--------------------------------------------------------
+Detail: https://wiki.archlinux.org/index.php/Beginners%27_Guide
+
+# boot up off Arch CD ISO
+loadkeys us
+vi /etc/locale.gen
+# uncomment en_CA, fr_CA, en_US, ja_JP
+locale-gen
+export LANG=en_CA.UTF-8
+
+-- partition disk
+cgdisk /dev/sda
+# for UEFI boot on 2T drive:
+#
+# sda1 1G   type=ef00 /boot/efi
+# sda2 255M type=8300 /boot
+# sda3 1.8T type=8e00 /
+
+-- set up luks full-disk crypto
+# https://wiki.archlinux.org/index.php/Dm-crypt_with_LUKS
+cryptsetup luksFormat /dev/sda3
+cryptsetup open --type luks /dev/sda3 sda3_crypt
+
+-- create LVM physical vol, vol group, logical vols
+# https://wiki.archlinux.org/index.php/LVM
+pvcreate /dev/mapper/sda3_crypt
+vgcreate arch-vg /dev/mapper/sda3_crypt
+lvcreate -L 100G arch-vg -n root
+lvcreate -L 1.7T arch-vg -n home
+lvresize -L +5G /dev/arch-vg/home # ...and adjust up cause I don’t need 20G swap
+lvcreate -L 15.96G arch-vg -n swap
+
+-- create filesystems
+mkfs.vfat -F32 /dev/sda1
+mkfs.ext4 /dev/sda2
+mkfs.ext4 /dev/mapper/arch--vg-root
+mkswap    /dev/mapper/arch--vg-swap
+swapon    /dev/mapper/arch--vg-swap
+
+-- mount filesystems
+mount /dev/mapper/arch--vg-root /mnt
+mkdir /mnt/boot
+mount /dev/sda2 /mnt/boot
+mkdir /mnt/boot/efi
+mount /dev/sda1 /mnt/boot/efi
+mkdir /mnt/home
+mount /dev/mapper/arch--vg-home /mnt/home
+
+-- install base system
+pacstrap -i /mnt base
+
+-- generate fstab based on what we’ve got mounted now
+genfstab -U -p /mnt >> /mnt/etc/fstab
+cat /mnt/etc/fstab  # check it!
+
+-- chroot ourselves under mnt dir
+arch-chroot /mnt
+
+-- configure our locale
+vi /etc/locale.gen
+# uncomment en_CA, fr_CA, en_US, ja_JP
+locale-gen
+echo LANG=en_CA.UTF-8 > /etc/locale.conf
+export LANG=en_CA.UTF-8
+
+-- set the console keymap
+vi /etc/vconsole.conf
+KEYMAP=us
+FONT=Lat2-Terminus16   # if you want a fancy terminal font
+
+-- set up timezone & hardware clock
+ln -s /usr/share/zoneinfo/America/Vancouver /etc/localtime
+hwclock --systohc --utc
+
+-- set hostname
+echo myawesomehostname > /etc/hostname
+
+-- read up on systemd (next-gen init)
+# https://wiki.archlinux.org/index.php/Systemd
+
+-- enable dhcpcd daemon on boot
+systemctl enable dhcpcd.service
+
+-- create initial boot ramdisk env
+# https://wiki.archlinux.org/index.php/mkinitcpio
+vi /etc/mkinitcpio.conf
+# modify the HOOKS line to add “encrypt lvm2” *before* “filesystems”
+# HOOKS=" ... keymap encrypt lvm2 filesystems ..."
+mkinitcpio -p linux
+
+-- set root passwd
+passwd
+
+-- install fsck.vfat since the UEFI ESP partition is FAT32
+pacman -S dosfstools
+
+-- install udisks2 for auto-mounting USB devices
+pacman -S udisks2
+
+-- install EFI bootloader
+# https://wiki.archlinux.org/index.php/Unified_Extensible_Firmware_Interface
+pacman -S grub efibootmgr
+grub-install --target=x86_64-efi --efi-directory=/boot/efi \
+    --bootloader-id=arch_grub --recheck --debug
+vi /etc/default/grub
+# tell grub that /dev/sda3 is encrypted by modifying GRUB_CMDLINE_LINUX
+# GRUB_CMDLINE_LINUX="cryptdevice=/dev/sda3:arch-vg
+grub-mkconfig -o /boot/grub/grub.cfg
+
+-- exit chroot environment, unmount filesystems and reboot
+exit # exit chroot
+umount -R /mnt
+reboot
+# log back in as root
+
+-- install yaourt package manager to make working with AUR easier
+# https://wiki.archlinux.org/index.php/AUR
+# https://wiki.archlinux.org/index.php/Yaourt
+pacman -S --needed base-devel
+pacman -S yajl   # since it turns out we need this in two seconds...
+cd /tmp
+curl -o package-query.tar.gz \
+        https://aur.archlinux.org/packages/pa/package-query/package-query.tar.gz
+curl -o yaourt.tar.gz \
+        https://aur.archlinux.org/packages/ya/yaourt/yaourt.tar.gz
+tar zxvf package-query.tar.gz
+tar zxvf yaourt.tar.gz
+cd package-query
+makepkg
+pacman -U package-query<tab> # ends with .xz I think
+cd ../yaourt
+makepkg
+pacman -U yaourt<tab> # same deal
+
+-- install essentials
+yaourt -S zsh sudo vim openssh git tmux
+
+-- create users
+useradd -m -g users -G wheel -s /bin/zsh chris
+passwd chris
+
+-- add members of wheel group to sudoers
+vi /etc/sudoers
+# enable wheel
+
+-- enable audio
+yaourt -S alsa-utils
+alsamixer # sset Master unmute
+speaker-test -c 2
+
+-- install gnome
+# https://wiki.archlinux.org/index.php/GNOME
+yaourt -S gnome gdm gnome-tweak-tool seahorse
+systemctl enable gdm.service
+
+-- install radeon driver
+# https://wiki.archlinux.org/index.php/ATI 
+# https://wiki.archlinux.org/index.php/AMD_Catalyst
+yaourt -S xf86-video-ati
+# if using the catalyst driver, enable webgl support. Go to chrome://flags,
+# check "override software rendering list", verify in chrome://gpu
+
+-- install infinality font rendering
+# https://wiki.archlinux.org/index.php/Font_Configuration
+yaourt -S freetype2-infinality
+yaourt -S fontconfig-infinality
+sudo infctl setstyle
+
+-- install fonts
+yaourt -S otf-source-code-pro otf-takao otf-ipafont
+
+-- install windows8 fonts
+# https://wiki.archlinux.org/index.php/MS_Fonts
+# pull down MS fonts
+curl -o  ttf-ms-win8.tgz \
+         https://drive.google.com/open?id=0BxQqjcVVn0shNGpqdDZYUjdaNUU
+tar zxvf ttf-ms-win8.tgz
+cd ttf-ms-win8.tgz
+makepkg -if
+
+-- install en/fr spell-checkers
+yaourt -S apsell-en aspell-fr
+
+-- install Japanese input/font support
+yaourt -S mozc
+
+-- install chromium with chrome’s flash + pdf viewer
+yaourt -S chromium chromium-pepper-flash-stable chromium-libpdf-stable
+# in chrome://plugins ensure they're enabled
+
+-- install jabber chat support for Empathy
+yaourt -S telepathy-gabble
+
+-- install VLC and transmission
+yaourt -S vlc transmission-gtk
+
+-- install HP printer/scanner support
+# https://wiki.archlinux.org/index.php/CUPS
+yaourt -S cups hplip
+vi /etc/sane.d/dll.conf
+# uncomment or add hpaio
+systemctl enable cups.service
+sudo hp-setup -i # PPD files under /usr/share/ppd/HP/
+
+-- install Java, Scala dev tools
+yaourt -S jdk7-openjdk
+yaourt -S sbt eclipse-scala-ide
+
