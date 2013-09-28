@@ -1,3 +1,5 @@
+# Standard post-install steps for Ubuntu
+
 install-cmdline-core:
 	apt-get install aptitude
 	aptitude install git
