@@ -134,7 +134,7 @@ makepkg
 pacman -U yaourt<tab> # same deal
 
 -- install essentials
-yaourt -S zsh sudo vim openssh git tmux
+yaourt -S zsh sudo vim openssh git tig tmux
 
 -- create users
 useradd -m -g users -G wheel -s /bin/zsh chris
