@@ -207,3 +207,5 @@ sudo hp-setup -i # PPD files under /usr/share/ppd/HP/
 yaourt -S jdk7-openjdk
 yaourt -S sbt eclipse-scala-ide
 
+-- install mutt
+yaourt -S mutt offlineimap notmuch-mutt msmtp urlview w3m
