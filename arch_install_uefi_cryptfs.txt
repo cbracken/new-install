@@ -210,5 +210,8 @@ yaourt -S sbt eclipse-scala-ide
 -- install mutt
 yaourt -S mutt offlineimap notmuch-mutt msmtp urlview w3m
 
+-- install texlive
+yaourt -S texlive-core texlive-latexextra texlive-pictures texlive-langcjk
+
 -- install libreoffice
 yaourt -S libreoffice libreoffice-gnome libreoffice-en-GB
