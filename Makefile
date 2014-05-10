@@ -11,7 +11,8 @@ install-irssi:
 	aptitude install irssi
 
 install-mutt:
-	aptitude install abook mutt msmtp notmuch offlineimap urlview w3m
+	aptitude install abook mutt msmtp notmuch offlineimap urlview w3m \
+		python-keyring
 
 remove-x-annoyances:
 	aptitude purge unity-lens-shopping
