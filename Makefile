@@ -7,8 +7,10 @@ install-cmdline-core:
 	aptitude install vim
 	aptitude install zsh
 
-install-cmdline-apps:
+install-irssi:
 	aptitude install irssi
+
+install-mutt:
 	aptitude install abook mutt msmtp notmuch offlineimap urlview w3m
 
 remove-x-annoyances:
