@@ -2,7 +2,8 @@
 
 install-cmdline-core:
 	apt-get install aptitude
-	aptitude install git
+	aptitude install git tig
+	aptitude install jq
 	aptitude install tmux
 	aptitude install vim
 	aptitude install zsh
@@ -11,16 +12,20 @@ install-irssi:
 	aptitude install irssi
 
 install-mutt:
-	aptitude install abook mutt msmtp notmuch offlineimap urlview w3m \
+	aptitude install \
+		abook \
+		mutt \
+		msmtp \
+		notmuch \
+		offlineimap \
+		urlview \
+		w3m \
 		python-keyring
-
-remove-x-annoyances:
-	aptitude purge unity-lens-shopping
-	aptitude purge appmenu-gtk appmenu-gtk3 appmenu-qt
-	aptitude purge liboverlay-scrollbar-0.2-0 liboverlay-scrollbar3-0.2-0
 
 install-x-apps:
 	aptitude install chromium
 	aptitude install fonts-takao
+	aptitude install i3
 	aptitude install ibus-mozc emacs-mozc
+	aptitude install rxvt-unicode-256color
 	aptitude install vim-gnome
