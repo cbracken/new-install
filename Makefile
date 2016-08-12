@@ -8,6 +8,9 @@ install-cmdline-core:
 	aptitude install vim
 	aptitude install zsh
 
+install-xterm-256color-italic:
+	tic xterm-256color-italic.terminfo
+
 install-irssi:
 	aptitude install irssi
 
