@@ -48,7 +48,7 @@ mkdir /mnt/home
 mount /dev/mapper/arch--vg-home /mnt/home
 
 -- install base system
-pacstrap -i /mnt base
+pacstrap -i /mnt base linux linux-firmware
 
 -- generate fstab based on what we’ve got mounted now
 genfstab -U -p /mnt >> /mnt/etc/fstab
@@ -57,6 +57,9 @@ cat /mnt/etc/fstab  # check it!
 -- chroot ourselves under mnt dir
 arch-chroot /mnt
 
+-- get vi and other stuff on the path
+export PATH="$PATH:/run/initramfs/usr/bin/vi"
+
 -- configure our locale
 vi /etc/locale.gen
 # uncomment en_CA, fr_CA, en_US, ja_JP
@@ -64,9 +67,18 @@ locale-gen
 echo LANG=en_CA.UTF-8 > /etc/locale.conf
 export LANG=en_CA.UTF-8
 
+-- Create a console keymap with ctrl and capslock swapped
+cp /usr/share/kbd/keymaps/i386/qwerty/us.map.gz us-ctrlcaps.map.gz
+gunzip us-ctrlcaps.map.gz
+# edit the file to set keycode 29 to Caps_Lock and keycode 58 to Control
+gzip us-ctrlcaps.map
+cp us-ctrlcaps.map.gz /usr/share/kbd/keymaps/i386/qwerty/
+sudo chown root /usr/share/kbd/keymaps/i386/qwerty/us-ctrlcaps.map.gz
+sudo chgrp root /usr/share/kbd/keymaps/i386/qwerty/us-ctrlcaps.map.gz
+
 -- set the console keymap
 vi /etc/vconsole.conf
-KEYMAP=us
+KEYMAP=us   # or us-ctrlcaps if you do the step above
 FONT=Lat2-Terminus16   # if you want a fancy terminal font
 
 -- set up timezone & hardware clock
@@ -86,7 +98,7 @@ systemctl enable dhcpcd.service
 # https://wiki.archlinux.org/index.php/mkinitcpio
 vi /etc/mkinitcpio.conf
 # modify the HOOKS line to add “encrypt lvm2” *before* “filesystems”
-# HOOKS=" ... keymap encrypt lvm2 filesystems ..."
+# HOOKS=" ... block encrypt lvm2 filesystems ..."
 mkinitcpio -p linux
 
 -- set root passwd
@@ -101,7 +113,7 @@ pacman -S udisks2
 -- install EFI bootloader
 # https://wiki.archlinux.org/index.php/Unified_Extensible_Firmware_Interface
 pacman -S grub efibootmgr
-grub-install --target=x86_64-efi --efi-directory=/boot/efi \
+grub-install --target=x86_64-efi --efi-directory=/efi \
     --bootloader-id=arch_grub --recheck --debug
 vi /etc/default/grub
 # tell grub that /dev/sda3 is encrypted by modifying GRUB_CMDLINE_LINUX
@@ -113,6 +125,43 @@ exit # exit chroot
 umount -R /mnt
 reboot
 # log back in as root
+
+
+-- install essentials
+pacman -S man-db man-pages
+pacman -S sudo openssh
+pacman -S zsh
+pacman -S vim
+
+
+-- install terminal tools
+pacman -S tmux
+
+
+-- install developer tools
+# Compilers, etc.
+pacman -S binutils
+pacman -S clang lld lldb
+pacman -S nasm
+
+# Source control.
+pacman -S git tig
+
+
+-- install window manager
+pacman -S sway swaylock swayidle dmenu rxvt-unicode xorg-server-xwayland xorg-xrdb
+# use noto-fonts when prompted
+
+
+-- install fonts
+pacman -S adobe-source-code-pro-fonts
+pacman -S adobe-source-serif-pro-fonts
+pacman -S adobe-source-han-sans-otc-fonts
+
+
+-- install firefox
+pacman -S firefox
+
 
 -- install yaourt package manager to make working with AUR easier
 # https://wiki.archlinux.org/index.php/AUR
@@ -132,9 +181,6 @@ pacman -U package-query<tab> # ends with .xz I think
 cd ../yaourt
 makepkg
 pacman -U yaourt<tab> # same deal
-
--- install essentials
-yaourt -S zsh sudo vim openssh git tig tmux
 
 -- create users
 useradd -m -g users -G wheel -s /bin/zsh chris
