@@ -488,6 +488,10 @@ it first:
 
     sudo pacman -S vim
 
+Support for zip archives is handy:
+
+    sudo pacman -S zip unzip
+
 Next, terminal multiplexing support via tmux:
 
     pacman -S tmux
