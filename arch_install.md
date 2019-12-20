@@ -524,6 +524,27 @@ Finally, we need a web browser:
     pacman -S firefox
 
 
+### Audio
+
+It's useful to have the `alsa-utils` package installed for playing around with
+audio levels via `alsa-mixer`.
+
+    pacman -S alsa-utils
+    pacman -S pulseaudio-alsa
+
+Then start pulseaudio on user login:
+
+    systemctl --user start pulseaudio
+
+If using Intel HDA audio, via the `snd_hda_intel` kernel module you may need to
+ensure the following line exists in `/etc/modprobe.d/alsa-base.conf` (or other
+equivalent file you edit/create under the `/etc/modprobe.d` directory):
+
+    options snd-hda-intel model=auto
+
+Without this, Intel audio sometimes simply utterly fails to work.
+
+
 ### Install Japanese input support
 
 This needs to be updated for 2020.
