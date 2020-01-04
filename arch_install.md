@@ -568,6 +568,15 @@ Fakeroot is a tool that makes it easier to create tar archives, etc. containing
 files with root ownership, which would otherwise require root user privileges.
 
 
+### Install firmware for NUC
+
+Intel NUC devices may need particular closed-source firmware blobs installed.
+For the NUC8i5BEK, install:
+
+    yay -S wd719x-firmware
+    yay -S aic94xx-firmware
+
+
 ### Install Japanese input support
 
 This needs to be updated for 2020.
