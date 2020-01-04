@@ -545,6 +545,29 @@ equivalent file you edit/create under the `/etc/modprobe.d` directory):
 Without this, Intel audio sometimes simply utterly fails to work.
 
 
+### Install yay for AUR support
+
+To support installing packages from AUR, we install the `yay` tool, which is a
+wrapper around `pacman` similar to what `yaourt` used to support. First we
+clone the source from AUR:
+
+    git clone https://aur.archlinux.org/yay.git
+    cd yay
+
+Next we run `makepkg` with the `-s` (build from source) and `-i` (install)
+options:
+
+    makepkg -si
+
+If you get a warning along the lines of "ERROR: Cannot find the fakeroot
+binary", install it via the following command:
+
+    sudo pacman -S fakeroot
+
+Fakeroot is a tool that makes it easier to create tar archives, etc. containing
+files with root ownership, which would otherwise require root user privileges.
+
+
 ### Install Japanese input support
 
 This needs to be updated for 2020.
