@@ -28,7 +28,7 @@ Set up your install environment
 Once booted, you'll be dropped to a root command prompt. We'll be doing our
 install in English, but substituting any other language here will allow you to
 follow the install steps in that language. Note that this only affects the
-language used during the install process, and does *not* affect the languages
+language used during the install process, and does _not_ affect the languages
 of the installation.
 
     # Set the desired keyboard layout; e.g. jp106.
@@ -464,7 +464,7 @@ Once installed, we edit the config file:
 It's recommended to add the `iburst` option at the end of every `server` line
 in the config file. This triggers a burst of packets only if it cannot obtain a
 connection on the first attempt. Do not use the `burst` option, which sends a
-burst of packets on *all* attempts and can get you blacklisted.
+burst of packets on _all_ attempts and can get you blacklisted.
 
 Enable and start the NTP service:
 
