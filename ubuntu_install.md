@@ -222,7 +222,7 @@ Next, let's install some software development tools.
 First, we'll start with the essentials.
 
     sudo apt install make
-    sudo apt install clang lldb lld
+    sudo apt install clang lldb lld clang-format
     sudo apt install git tig
     sudo apt install universal-ctags cscope
 
