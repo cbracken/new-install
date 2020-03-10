@@ -174,6 +174,25 @@ xdg-utils package to launch URLs from the terminal.
     sudo apt install xdg-utils
 
 
+### Install fonts
+
+We'll install the Noto family of fonts as a fallback font with broad coverage
+of character sets.
+
+    sudo apt install fonts-noto-core        \
+                     fonts-noto-mono        \
+                     fonts-noto-extra       \
+                     fonts-noto-cjk         \
+                     fonts-noto-cjk-extra   \
+                     fonts-noto-color-emoji
+
+Next we'll install the Japanese IPA Fonts. IPA Font and IPAex Font are produced
+by the Dokuritsu Kyousei Houjin's Information-technology Promotion Agency (IPA)
+and distributed under a permissive licence.
+
+    sudo apt install fonts-ipafont fonts-ipaexfont
+
+
 ### Install Dunst
 
 [Dunst][dunst_site] is a lightweight daemon for displaying notifications to be
@@ -204,13 +223,7 @@ To reset this value to the default, change it to -1.0.
 Get Japanese working
 --------------------
 
-First we're going to need fonts. IPA Font and IPAex Font are produced by the
-Dokuritsu Kyousei Houjin's Information-technology Promotion Agency (IPA) and
-distributed under a permissive licence.
-
-    sudo apt install fonts-ipafont fonts-ipaexfont
-
-Next, we'll get an input manager installed. Input managers have two parts, the
+First, we'll get an input manager installed. Input managers have two parts, the
 input system (ibus, uim, fcitx) and the converion engine (anthy, mozc). As of
 March 2020 uim nor fcitx are unsupported on Wayland, but ibus works well. Anthy
 development has effectively been dead since 2009, so instead we'll use mozc.
