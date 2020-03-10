@@ -59,6 +59,15 @@ Next we'll purge any leftover config files from any removed packages:
 Configure the system
 --------------------
 
+### Install language packs
+
+Install languages we care about.
+
+   sudo apt install language-pack-en
+   sudo apt install language-pack-fr
+   sudo apt install language-pack-ja
+
+
 ### Generate localisations
 
 Edit `/etc/locales.gen` and uncomment locales that we care about.
