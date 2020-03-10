@@ -165,6 +165,17 @@ xdg-utils package to launch URLs from the terminal.
     sudo apt install xdg-utils
 
 
+### Install Dunst
+
+[Dunst][dunst_site] is a lightweight daemon for displaying notifications to be
+presented to the user over dbus. We'll also install the default Gnome icon
+theme and the notify-send command-line tool.
+
+    sudo apt install dunst
+    sudo apt install libnotify-bin
+    sudo apt install gnome-icon-theme
+
+
 ### Install Firefox
 
 Next, we'll install Firefox. Since we want to be able to decode media, we also
