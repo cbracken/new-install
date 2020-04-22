@@ -69,8 +69,9 @@ Install general packages:
 2. Install sudo: `pkg install sudo`
 3. Edit /usr/local/etc/sudoers. Uncomment the line: `%wheel ALL=(ALL) ALL`
 4. Install zsh: `pkg install zsh`
-5. Install vim: `pkg install vim-console`
-6. Install git: `pkg install git` (agree to install all)
+5. Install zsh: `pkg install bash`
+6. Install vim: `pkg install vim-console`
+7. Install git: `pkg install git` (agree to install all)
 
 Install developer packages:
 
@@ -78,7 +79,7 @@ Install developer packages:
 2. Install python: `pkg install python3 python`
 3. Install go: `pkg install go`
 4. Install nasm: `pkg install nasm`
-5. Install bazel: `pkg install bazel`
+5. Install bazel: `pkg install bazel` (note: this requires `bash` at runtime)
 6. Install gn: `pkg install gn`
 7. Install ninja: `pkg install ninja`
 8. Install cscope: `pkg install cscope`
