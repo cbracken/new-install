@@ -314,19 +314,23 @@ Then set it to load at boot time by adding the following line to `/etc/rc.conf`:
 In some instances, this seems to result in a kernel panic. If that happens,
 install DRM from the `graphics/drm-kmod` port in the ports tree.
 
-For web browser support:
+Install fonts:
 
     sudo pkg install webfonts
-    sudo pkg install firefox
     sudo pkg install noto-basic
     sudo pkg install noto-jp
-    sudo pkg install takao
+    sudo pkg install ja-font-ipa ja-font-ipa-uigothic ja-font-ipaex
 
 Then refresh the font cache:
 
     fc-cache -f
 
+Install firefox:
+
+    sudo pkg install firefox
+
 Reboot the system and attempt to run `startx`.
+
 
 ### Japanese input on the virtual console
 
