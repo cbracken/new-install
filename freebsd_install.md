@@ -257,6 +257,36 @@ forward root's mail to a local user. To do so:
    sudo service sshd restart
    ```
 
+### NVIDIA drivers
+
+For systems with an NVIDIA card, we'll install the drivers, configure them to
+load at boot, and add X11 config.
+
+First install the drivers:
+
+    sudo pkg install nvidia-driver
+
+Next add the following line to `/boot/loader.conf`:
+
+    nvidia_load="YES"
+
+Then add the following line to `/etc/rc.conf`:
+
+    kld_list="nvidia-modeset"
+
+Next, create the file `/usr/local/etc/X11/xorg.conf.d/driver-nvidia.conf` with
+the following contents:
+
+    Section "Device"
+        Identifier "NVIDIA Card"
+        VendorName "NVIDIA Corporation"
+	Driver "nvidia"
+    EndSection
+
+Finally, reboot the system or run `kldload nvidia-modeset` to manually load the
+driver.
+
+
 ### Configure XWindows
 
 To install XWindows with the i3 window manager and compton compositor:
