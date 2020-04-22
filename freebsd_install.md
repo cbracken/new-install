@@ -77,6 +77,10 @@ Install developer packages:
 1. Install tig: `pkg install tig`
 2. Install go: `pkg install go`
 3. Install nasm: `pkg install nasm`
+4. Install bazel: `pkg install bazel`
+5. Install gn: `pkg install gn`
+6. Install ninja: `pkg install ninja`
+7. Install cscope: `pkg install cscope`
 
 Log in as user:
 
