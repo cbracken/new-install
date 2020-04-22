@@ -75,12 +75,13 @@ Install general packages:
 Install developer packages:
 
 1. Install tig: `pkg install tig`
-2. Install go: `pkg install go`
-3. Install nasm: `pkg install nasm`
-4. Install bazel: `pkg install bazel`
-5. Install gn: `pkg install gn`
-6. Install ninja: `pkg install ninja`
-7. Install cscope: `pkg install cscope`
+2. Install python: `pkg install python3 python`
+3. Install go: `pkg install go`
+4. Install nasm: `pkg install nasm`
+5. Install bazel: `pkg install bazel`
+6. Install gn: `pkg install gn`
+7. Install ninja: `pkg install ninja`
+8. Install cscope: `pkg install cscope`
 
 Log in as user:
 
