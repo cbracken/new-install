@@ -458,6 +458,13 @@ To force sync the time on the host:
     sudo ntpdate -v -b in.pool.ntp.org
 
 
+### The PC speaker bell is annoying
+
+To disable the PC speaker bell, edit `/etc/sysctl.conf` and add:
+
+    kern.vt.enable_bell=0
+
+
 ### Intel NUC6i3SYK-specific issues
 
 #### SD card reader doesn't work
@@ -479,6 +486,7 @@ Alternatively, edit `/boot/loader.conf` to contain:
 If that doesn't work, edit `/boot/device.hints` to contain:
 
     hint.sdhci_pci.0.disabled="1"
+
 
 #### Bluetooth doesn't work
 
