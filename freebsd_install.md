@@ -352,34 +352,33 @@ command. See the `vtfontcvt` man page for details.
 Use the mechanism described (`vidfont` and `vidcontrol`) elsewhere in this
 document to set the font.
 
+
 ### Japanese input in XWindows
 
 Setting Japanese keyboard layout with caps-lock as control:
 
-    setxkbmap jp
-    setxkbmap -option ctrl:nocaps
+    setxkbmap -layout jp -option ctrl:nocaps
 
 Installing mozc IME:
 
-    sudo install ja-fcitx-mozc zh-fcitx-configtool
+    sudo install ja-ibus-mozc
 
 In `~/.xinitrc`, before launching i3, add:
 
     # Use fcitx for Japanese IME.
-    export GTK_IM_MODULE=fcitx
-    export QT_IM_MODULE=xim
-    export XMODIFIERS=@im=fcitx
+    export GTK_IM_MODULE=ibus
+    export QT_IM_MODULE=ibus
+    export XMODIFIERS=@im=ibus
 
-    # Start mozc engine and fcitx IME.
+    # Start mozc engine and ibus IME.
     /usr/local/bin/mozc start
-    fcitx -r -d
+    ibus-daemon --xim &
 
-Configure fcitx by running `fcitx-configtool`. Using the *Available input
-method* pane, add *Keyboard - Japanese* and *Mozc*. Remove US keyboard if
-present (unless you're using a US keyboard). In the *Global Config* section,
-change the *Trigger input method* setting by clicking the button, then pressing
-the hankaku/zenkaku key. On a US keyboard, the useless bottom right 'menu' key
-works well too.
+Configure ibus by running `ibus-setup`. Using the *Input Method* pane, add
+*Japanese* and *Mozc*. Remove US keyboard if present (unless you're using a US
+keyboard). Note that when you do this step, dbus will need to be running; this
+involves either a reboot after the XWindows config steps above or manually
+starting it via `service dbus start` before running `startx`.
 
 
 Editing kernel sources
