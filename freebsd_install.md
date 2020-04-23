@@ -256,8 +256,8 @@ forward root's mail to a local user. To do so:
    find your public key in `~/.ssh/id_rsa.pub` on the existing host you want to
    connect from.
 1. Edit `/etc/ssh/sshd_config` to disable password-based authentication, and
-   allow only key-based authentication by commenting out the
-   `PasswordAuthentication yes` line.
+   allow only key-based authentication by setting `PasswordAuthentication` and
+   `ChallengeResponseAuthentication` to `no`.
 1. Restart the sshd server to pick up the config change.
    ```
    sudo service sshd restart
