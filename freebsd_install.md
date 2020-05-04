@@ -59,7 +59,8 @@ Log in as root:
 
 Configure sendmail:
 
-1. Edit `/etc/mail/aliases`. Set aliases for `root`, `manager`, and `dumper`.
+1. Edit `/etc/mail/aliases`. Set aliases for `root`, `manager`, and
+   `dumper`.
 2. Run `newaliases` to update the aliases database.
 3. See https://www.freebsd.org/doc/handbook/sendmail.html for details.
 
@@ -67,7 +68,7 @@ Install general packages:
 
 1. `pkg update -f`
 2. Install sudo: `pkg install sudo`
-3. Edit /usr/local/etc/sudoers. Uncomment the line: `%wheel ALL=(ALL) ALL`
+3. Edit /usr/local/etc/sudoers. Uncomment: `%wheel ALL=(ALL) ALL`
 4. Install zsh: `pkg install zsh`
 5. Install zsh: `pkg install bash`
 6. Install vim: `pkg install vim-console`
@@ -79,7 +80,7 @@ Install developer packages:
 2. Install python: `pkg install python3 python`
 3. Install go: `pkg install go`
 4. Install nasm: `pkg install nasm`
-5. Install bazel: `pkg install bazel` (note: this requires `bash` at runtime)
+5. Install bazel: `pkg install bazel` (note: requires `bash` at runtime)
 6. Install gn: `pkg install gn`
 7. Install ninja: `pkg install ninja`
 8. Install cscope: `pkg install cscope`
@@ -97,7 +98,8 @@ Log in as user again:
 Setting the keyboard layout
 ---------------------------
 
-The console keyboard layout can be temporarily changed using the `kbdcontrol` command:
+The console keyboard layout can be temporarily changed using the
+`kbdcontrol` command:
 
     kbdcontrol -l us.dvorak
 
@@ -105,9 +107,9 @@ It can be permanently set by adding a line to `/etc/rc.conf`:
 
     keymap=us.dvorak
 
-For US keyboard layout with Caps Lock as Control, use `us.ctrl` for a Japanese
-keyboard with Caps Lock as Control, use `jp.capsctrl`. You can find all layouts
-in the `/usr/share/vt/keymaps` directory.
+For US keyboard layout with Caps Lock as Control, use `us.ctrl` for a
+Japanese keyboard with Caps Lock as Control, use `jp.capsctrl`. You can
+find all layouts in the `/usr/share/vt/keymaps` directory.
 
 In XWindows, the keyboard can be set using `setxkbmap`:
 
@@ -123,9 +125,9 @@ To map Caps Lock into a control key:
 Setting console font
 --------------------
 
-To list available fonts, run `vidfont`, an ncurses-based program that sets the
-font to something legible when running. When it exits, it'll dump the selected
-font name.
+To list available fonts, run `vidfont`, an ncurses-based program that
+sets the font to something legible when running. When it exits, it'll
+dump the selected font name.
 
 To set the font from a script, run:
 
@@ -137,8 +139,8 @@ To permanently set the console font, edit `/etc/rc.conf`:
 
     allscreens_flags="-f FONTNAME"
 
-I find `terminus-b32` to be the most legible on a small screen. On a large
-screen, `vgarom-8x14` or `vgarom-8x16` might be better.
+I find `terminus-b32` to be the most legible on a small screen. On a
+large screen, `vgarom-8x14` or `vgarom-8x16` might be better.
 
 A couple reference articles relating to framebuffer console fonts:
 
@@ -150,21 +152,23 @@ A couple reference articles relating to framebuffer console fonts:
 Using a serial cable
 --------------------
 
-FreeBSD includes built-in support for various UART serial cables including the
-Prolific PL-2303 and FTDI cables. Connecting the cable will create three
-character devices named `ttyUN`, `ttyUN.init`, and `ttyUN.lock` in the dev
-filesystem.
+FreeBSD includes built-in support for various UART serial cables
+including the Prolific PL-2303 and FTDI cables. Connecting the cable
+will create three character devices named `ttyUN`, `ttyUN.init`, and
+`ttyUN.lock` in the dev filesystem.
 
 * `ttyUN` is the serial device.
-* `ttyUN.init` is an initialisation device used to initialise communication
-  port parameters each time a port is opened, such as `crtscts` for modems
-  which use `RTS/CTS` signalling for flow control.
-* `ttyUN.lock` is used to lock flags on ports to prevent users or programs from
-  changing certain parameters. See the man pages for `termios`, `sio`, and
-  `stty` for information on terminal settings, locking and initialising
-  devices, and setting terminal options, respectively.
+* `ttyUN.init` is an initialisation device used to initialise
+  communication port parameters each time a port is opened, such as
+  `crtscts` for modems which use `RTS/CTS` signalling for flow control.
+* `ttyUN.lock` is used to lock flags on ports to prevent users or
+  programs from changing certain parameters. See the man pages for
+  `termios`, `sio`, and `stty` for information on terminal settings,
+  locking and initialising devices, and setting terminal options,
+  respectively.
 
-More info on serial port configuration can be found in the FreeBSD Handbook:
+More info on serial port configuration can be found in the FreeBSD
+Handbook:
 
 * [25.2 USB Virtual Serial Ports](https://www.freebsd.org/doc/handbook/usb-device-mode-terminals.html)
 * [26.2 Serial Terminology and Hardware](https://www.freebsd.org/doc/handbook/serial.html)
@@ -181,8 +185,8 @@ Installing on a new machine
 
 ### Configure machine
 
-1. When adding the first user, when prompted for additional groups in addition
-   to their own group add them to `wheel`.
+1. When adding the first user, when prompted for additional groups in
+   addition to their own group add them to `wheel`.
 1. Set domain-qualified hostname in `/etc/rc.conf`.
 1. Update `/etc/hosts` to use domain name. Add raw hostname and
    domain-qualified hostname after localhost entries.
@@ -204,15 +208,15 @@ Installing on a new machine
 
 ### Set up sudo
 
-1. Edit `/usr/local/sudoers` and uncomment the following line to enable sudo
-   access for members of the `wheel` group:
+1. Edit `/usr/local/sudoers` and uncomment the following line to enable
+   sudo access for members of the `wheel` group:
    ```
    %wheel ALL=(ALL) ALL
    ```
 1. Disable direct root login by editing the passwd file using the `vipw`
-   command. Find the row starting with `root:` and replace the hashed password
-   between the first and second colons on that line with `*`. The line should
-   look something like:
+   command. Find the row starting with `root:` and replace the hashed
+   password between the first and second colons on that line with `*`.
+   The line should look something like:
    ```
    root:*:0:0::0:0:Charlie &:/root:/bin/csh
    ```
@@ -220,16 +224,19 @@ Installing on a new machine
 
 ### Local email setup
 
-By default, sendmail operates localhost only. If you disable it, you'll need to
-enable an alternative mail handler since the system assumes mail is available.
+By default, sendmail operates localhost only. If you disable it, you'll
+need to enable an alternative mail handler since the system assumes mail
+is available.
 
-Given that we generally want to disable root login on all hosts, it's useful to
-forward root's mail to a local user. To do so:
+Given that we generally want to disable root login on all hosts, it's
+useful to forward root's mail to a local user. To do so:
 
-1. Edit `/etc/mail/aliases`. Forward root's mail to a local user (e.g. `chris`)
-   or a domain-qualified email address such as `chris@bracken.jp`.
-2. Run `sudo newaliases` to rebuild the random-access database populated from
-   `/etc/mail/aliases`. This is exactly the same as `sudo sendmail -bi`.
+1. Edit `/etc/mail/aliases`. Forward root's mail to a local user (e.g.
+   `chris`) or a domain-qualified email address such as
+   `chris@bracken.jp`.
+2. Run `sudo newaliases` to rebuild the random-access database populated
+   from `/etc/mail/aliases`. This is exactly the same as `sudo sendmail
+   -bi`.
 
 ### Configure sshd
 
@@ -250,14 +257,15 @@ forward root's mail to a local user. To do so:
    ```
    ssh myhost
    ```
-1. Copy your existing public key into `~/.ssh/authorized_keys` on the new
-   machine -- e.g. on the new host: `cat > ~/.ssh/authorized_keys`. Then paste
-   the public key you want to use to log in, and type ctrl-d to save. You can
-   find your public key in `~/.ssh/id_rsa.pub` on the existing host you want to
-   connect from.
-1. Edit `/etc/ssh/sshd_config` to disable password-based authentication, and
-   allow only key-based authentication by setting `PasswordAuthentication` and
-   `ChallengeResponseAuthentication` to `no`.
+1. Copy your existing public key into `~/.ssh/authorized_keys` on the
+   new machine -- e.g. on the new host: `cat > ~/.ssh/authorized_keys`.
+   Then paste the public key you want to use to log in, and type ctrl-d
+   to save. You can find your public key in `~/.ssh/id_rsa.pub` on the
+   existing host you want to connect from.
+1. Edit `/etc/ssh/sshd_config` to disable password-based authentication,
+   and allow only key-based authentication by setting
+   `PasswordAuthentication` and `ChallengeResponseAuthentication` to
+   `no`.
 1. Restart the sshd server to pick up the config change.
    ```
    sudo service sshd restart
@@ -279,8 +287,8 @@ We may also want to disable the PC speaker and its annoying beep. Edit
 
 ### NVIDIA drivers
 
-For systems with an NVIDIA card, we'll install the drivers, configure them to
-load at boot, and add X11 config.
+For systems with an NVIDIA card, we'll install the drivers, configure
+them to load at boot, and add X11 config.
 
 First install the drivers:
 
@@ -294,8 +302,9 @@ Then add the following line to `/etc/rc.conf`:
 
     kld_list="nvidia-modeset"
 
-Next, create the file `/usr/local/etc/X11/xorg.conf.d/driver-nvidia.conf` with
-the following contents:
+Next, create the file
+`/usr/local/etc/X11/xorg.conf.d/driver-nvidia.conf` with the following
+contents:
 
     Section "Device"
         Identifier "NVIDIA Card"
@@ -303,8 +312,8 @@ the following contents:
 	Driver "nvidia"
     EndSection
 
-Finally, reboot the system or run `kldload nvidia-modeset` to manually load the
-driver.
+Finally, reboot the system or run `kldload nvidia-modeset` to manually
+load the driver.
 
 
 ### Configure XWindows
@@ -327,12 +336,14 @@ Install DRM kernel module:
 
     sudo pkg install drm-fbsd12.0-kmod
 
-Then set it to load at boot time by adding the following line to `/etc/rc.conf`:
+Then set it to load at boot time by adding the following line to
+`/etc/rc.conf`:
 
     kld_list="/boot/modules/i915kms.ko"
 
-In some instances, this seems to result in a kernel panic. If that happens,
-install DRM from the `graphics/drm-kmod` port in the ports tree.
+In some instances, this seems to result in a kernel panic. If that
+happens, install DRM from the `graphics/drm-kmod` port in the ports
+tree.
 
 Install fonts:
 
@@ -366,11 +377,11 @@ Copy the fonts to a local font directory:
     sudo mkdir /usr/local/share/fonts/vt
     cp *.fnt /usr/local/share/fonts/vt
 
-You can convert BDF or HEX fonts to console `.fnt` files using the `vtfontcvt`
-command. See the `vtfontcvt` man page for details.
+You can convert BDF or HEX fonts to console `.fnt` files using the
+`vtfontcvt` command. See the `vtfontcvt` man page for details.
 
-Use the mechanism described (`vidfont` and `vidcontrol`) elsewhere in this
-document to set the font.
+Use the mechanism described (`vidfont` and `vidcontrol`) elsewhere in
+this document to set the font.
 
 
 ### Japanese input in XWindows
@@ -394,11 +405,12 @@ In `~/.xinitrc`, before launching i3, add:
     /usr/local/bin/mozc start
     ibus-daemon --xim &
 
-Configure ibus by running `ibus-setup`. Using the *Input Method* pane, add
-*Japanese* and *Mozc*. Remove US keyboard if present (unless you're using a US
-keyboard). Note that when you do this step, dbus will need to be running; this
-involves either a reboot after the XWindows config steps above or manually
-starting it via `service dbus start` before running `startx`.
+Configure ibus by running `ibus-setup`. Using the *Input Method* pane,
+add *Japanese* and *Mozc*. Remove US keyboard if present (unless you're
+using a US keyboard). Note that when you do this step, dbus will need to
+be running; this involves either a reboot after the XWindows config
+steps above or manually starting it via `service dbus start` before
+running `startx`.
 
 
 Editing kernel sources
@@ -437,25 +449,25 @@ configured and running, you'll get a crash on keyboard input to dmenu.
 
 ### Can't sudo or log in as root
 
-Imagine you delete the root password via `vipw` without actually editing the
-`/usr/local/etc/sudoers` file first, or that you did edit that file but that no
-user is in the `wheel` group. Time to boot to single-user mode. Reboot the
-machine and when prompted at the initial FreeBSD boot prompt, quickly select
-option `2` to boot to single-user mode.
+Imagine you delete the root password via `vipw` without actually editing
+the `/usr/local/etc/sudoers` file first, or that you did edit that file
+but that no user is in the `wheel` group. Time to boot to single-user
+mode. Reboot the machine and when prompted at the initial FreeBSD boot
+prompt, quickly select option `2` to boot to single-user mode.
 
-The root filesystem is mounted read-only by default, so first we'll need to
-remount the root filesystem as read-write:
+The root filesystem is mounted read-only by default, so first we'll need
+to remount the root filesystem as read-write:
 
     /sbin/mount -o rw /
 
-Next, edit `/usr/local/etc/sudoers` or make whatever other changes are required
-to fix your mistakes. Finally, reboot.
+Next, edit `/usr/local/etc/sudoers` or make whatever other changes are
+required to fix your mistakes. Finally, reboot.
 
 
 ### Force renew DHCP lease
 
-DHCP leases are cached in /var/db/dhclient.leases.em0 (remplace `em0` with the
-interface name).
+DHCP leases are cached in /var/db/dhclient.leases.em0 (remplace `em0`
+with the interface name).
 
 To force renewal of DHCP lease:
 
@@ -481,11 +493,11 @@ Intel NUC6i3SYK devices give a repeating error on startup:
 
     sdhci_pci0_slot0: Controller timeout
 
-and dumps registers. It seems like there's an issue with support for the NUC's
-SD card reader. After a couple minutes, eventually it gives up and continues.
-To eliminate the warning on startup, reboot and enter the BIOS by holding down
-F2, then disable the SD coard reader in the *Devices* section of the *Advanced*
-options.
+and dumps registers. It seems like there's an issue with support for the
+NUC's SD card reader. After a couple minutes, eventually it gives up and
+continues.  To eliminate the warning on startup, reboot and enter the
+BIOS by holding down F2, then disable the SD coard reader in the
+*Devices* section of the *Advanced* options.
 
 Alternatively, edit `/boot/loader.conf` to contain:
 
@@ -501,9 +513,10 @@ If that doesn't work, edit `/boot/device.hints` to contain:
 Mostly from notes in FreeBSD [Bugzilla issue
 237083](https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=237038).
 
-The NUC's Intel 8260 bluetooth/wireless requires a custom firmware download.
-FreeBSD 12.0 doesn't ship with all the support needed for this chipset. Fixes
-were landed in July 2019, but will take time to get released.
+The NUC's Intel 8260 bluetooth/wireless requires a custom firmware
+download.  FreeBSD 12.0 doesn't ship with all the support needed for
+this chipset. Fixes were landed in July 2019, but will take time to get
+released.
 
 In the meantime, the firmware downloader can be found here:
 [](https://github.com/wulf7/iwmbt-firmware). Build the downloader:
@@ -512,11 +525,12 @@ In the meantime, the firmware downloader can be found here:
     cd iwmbt-firmake
     make
 
-There's no need to install this, since it's a one-off tool to download and
-install the firmware. However, before you run it, you need to prevent FreeBSD
-from trying to auto-attach the device. Edit `/etc/devd.conf` and comment out
-the following lines, then power off and power back on the machine (a reboot is
-insufficient to clear the hardware state):
+There's no need to install this, since it's a one-off tool to download
+and install the firmware. However, before you run it, you need to
+prevent FreeBSD from trying to auto-attach the device. Edit
+`/etc/devd.conf` and comment out the following lines, then power off and
+power back on the machine (a reboot is insufficient to clear the
+hardware state):
 
     attach 100 {
     	device-name "ubt[0-9]+";
@@ -528,8 +542,8 @@ Next, to download the firmware, we run:
     sudo ./iwmbtfw
 
 This should get the download to happen, writing the firmware to
-`/usr/local/share/iwmbt-firmware/ibt-11-5.sfi`. You can then start the service
-with:
+`/usr/local/share/iwmbt-firmware/ibt-11-5.sfi`. You can then start the
+service with:
 
     sudo service start bluetooth ubt0
 
@@ -552,4 +566,5 @@ It should display something like:
 I notice when I do it, I'm missing the `ubt0hci` and `ubt012cap` entries
 though.
 
-Once you're done, uncomment the section of `/dev/devd.conf` above and reboot.
+Once you're done, uncomment the section of `/dev/devd.conf` above and
+reboot.
