@@ -338,6 +338,18 @@ In some instances, this seems to result in a kernel panic. If that
 happens, install DRM from the `graphics/drm-kmod` port in the ports
 tree.
 
+To configure natural scrolling, create the file
+`/usr/local/etc/X11/xorg.conf.d/mouse.conf` with the following contents:
+
+    Section "InputDevice"
+      Identifier "Mouse1"
+      Driver "mouse"
+      Option "Protocol" "auto"
+      Option "Device" "/dev/sysmouse"
+      Option "Buttons" "5"
+      Option "ZAxisMapping" "4 5"
+    EndSection
+
 Install fonts:
 
     sudo pkg install webfonts
