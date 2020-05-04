@@ -101,11 +101,11 @@ Setting the keyboard layout
 The console keyboard layout can be temporarily changed using the
 `kbdcontrol` command:
 
-    kbdcontrol -l us.dvorak
+    kbdcontrol -l jp.capsctrl
 
 It can be permanently set by adding a line to `/etc/rc.conf`:
 
-    keymap=us.dvorak
+    keymap=jp.capsctrl
 
 For US keyboard layout with Caps Lock as Control, use `us.ctrl` for a
 Japanese keyboard with Caps Lock as Control, use `jp.capsctrl`. You can
@@ -113,7 +113,7 @@ find all layouts in the `/usr/share/vt/keymaps` directory.
 
 In XWindows, the keyboard can be set using `setxkbmap`:
 
-    setxkbmap dvorak
+    setxkbmap jp
 
 It can be permanently set by adding the above line to `.xinitrc`.
 
