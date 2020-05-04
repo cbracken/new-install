@@ -263,6 +263,20 @@ forward root's mail to a local user. To do so:
    sudo service sshd restart
    ```
 
+### Configure audio
+
+We'll want some mechanism for managing audio volume. The `alsa-utils`
+package includes `amixer` which does the trick:
+
+    sudo pkg install alsa-utils
+
+We may also want to disable the PC speaker and its annoying beep. Edit
+`/etc/sysctl.conf` and add the following:
+
+    # Disable the terminal bell.
+    kern.vt.enable_bell=0
+
+
 ### NVIDIA drivers
 
 For systems with an NVIDIA card, we'll install the drivers, configure them to
@@ -457,13 +471,6 @@ To manually unbind/remove an IP address from an interface:
 To force sync the time on the host:
 
     sudo ntpdate -v -b in.pool.ntp.org
-
-
-### The PC speaker bell is annoying
-
-To disable the PC speaker bell, edit `/etc/sysctl.conf` and add:
-
-    kern.vt.enable_bell=0
 
 
 ### Intel NUC6i3SYK-specific issues
