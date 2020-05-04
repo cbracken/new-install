@@ -1,10 +1,23 @@
 FreeBSD new install instructions
 ================================
 
+Download install image
+----------------------
+
+First, we'll need to download an install image from
+https://www.freebsd.org/where.html. These instructions presume amd64
+architecture, so we'll use an amd64-memstick image.
+
+Once the image is downloaded, write it to a USB stick using `dd`. Using
+the instructions in the FreeBSD Handbook here:
+https://www.freebsd.org/doc/handbook/bsdinstall-pre.html.
+
+
 Install from USB stick
 ----------------------
 
-From USB stick, install:
+Boot from the USB stick in UEFI mode. The machine should now boot into
+the FreeBSD installer.
 
 1. Keyboard layout: USA (Caps Lock acts as Left Ctrl).
 2. Set hostname
@@ -16,87 +29,11 @@ From USB stick, install:
 8. Clean `/tmp` on startup.
 9. Add user with `wheel` additional group.
 
-Log in as root:
-
-1. In `/boot/loader.conf`, add:
-   ```
-   if_iwm_load="YES"
-   iwm8265fw_load="YES"
-   ```
-2. To configure wired ethernet in `/etc/rc.conf`, add:
-   ```
-   # SYNCDHCP forces startup to wait for dhclient to return, DHCP does not.
-   ifconfig_em0="SYNCDHCP"
-   ```
-3. To configure WiFi in `/etc/rc.conf`, add:
-   ```
-   wlans_iwm0="wlan0"
-   ifconfig_wlan0="WPA DHCP"
-   ```
-4. In `/etc/wpa_supplicant.conf`, add an entry:
-   ```
-   network={
-	   ssid="my_ssid_name"
-	   psk="my_password"
-   }
-   ```
-5. Run: `chmod go-rwx /etc/wpa_supplicant.conf`
-6. Edit `/etc/hosts` to fix the domain name and host:
-   ```
-   ::1       localhost localhost.bracken.jp myhost myhost.bracken.jp
-   127.0.0.1 localhost localhost.bracken.jp myhost myhost.bracken.jp
-   ```
-7. Reboot by running: `reboot`
-
-If required, dynamically load the iwm8265 intel Wifi driver:
-
-    kldload if_iwm
-
-Log in as root:
-
-1. Get the Wifi MAC address `ifconfig wlan0`.
-2. In the router, manually assign a fixed IP address.
-
-Configure sendmail:
-
-1. Edit `/etc/mail/aliases`. Set aliases for `root`, `manager`, and
-   `dumper`.
-2. Run `newaliases` to update the aliases database.
-3. See https://www.freebsd.org/doc/handbook/sendmail.html for details.
-
-Install general packages:
-
-1. `pkg update -f`
-2. Install sudo: `pkg install sudo`
-3. Edit /usr/local/etc/sudoers. Uncomment: `%wheel ALL=(ALL) ALL`
-4. Install zsh: `pkg install zsh`
-5. Install zsh: `pkg install bash`
-6. Install vim: `pkg install vim-console`
-7. Install git: `pkg install git` (agree to install all)
-
-Install developer packages:
-
-1. Install tig: `pkg install tig`
-2. Install python: `pkg install python3 python`
-3. Install go: `pkg install go`
-4. Install nasm: `pkg install nasm`
-5. Install bazel: `pkg install bazel` (note: requires `bash` at runtime)
-6. Install gn: `pkg install gn`
-7. Install ninja: `pkg install ninja`
-8. Install cscope: `pkg install cscope`
-
-Log in as user:
-
-1. `chsh -s /usr/local/bin/zsh`
-2. `exit`
-
-Log in as user again:
-
-1. `ssh-keygen -t rsa -b 4096 -C "chris@bracken.jp (hostname)"`
+Once these steps are done, select the option to drop into a console
+session to complete a few additional steps.
 
 
-Setting the keyboard layout
----------------------------
+### Set the keyboard layout
 
 The console keyboard layout can be temporarily changed using the
 `kbdcontrol` command:
@@ -122,8 +59,76 @@ To map Caps Lock into a control key:
     setxkbmap -option ctrl:nocaps
 
 
-Setting console font
---------------------
+### Configure the hostname
+
+First we'll get the hostname set:
+
+First, set domain-qualified hostname in `/etc/rc.conf`.
+
+    hostname="myhost.bracken.jp"
+
+Next, update `/etc/hosts` to use domain name. Add raw hostname and
+domain-qualified hostname after localhost entries.
+
+    ::1       localhost localhost.bracken.jp myhost myhost.bracken.jp
+    127.0.0.1 localhost localhost.bracken.jp myhost myhost.bracken.jp
+
+
+### Configure wired ethernet
+
+Next, configure wired ethernet for DHCP. In `/etc/rc.conf`, add:
+
+    # SYNCDHCP forces startup to wait for dhclient to return, DHCP does not.
+    ifconfig_em0="SYNCDHCP"
+
+
+### Configure WiFi
+
+If we need Intel WiFi, in `/boot/loader.conf`, add:
+
+    if_iwm_load="YES"
+    iwm8265fw_load="YES"
+
+and then configure DHCP for WiFi in `/etc/rc.conf`:
+
+    wlans_iwm0="wlan0"
+    ifconfig_wlan0="WPA DHCP"
+
+and set up the WiFi network and password in `/etc/wpa_supplicant.conf`:
+
+    network={
+     ssid="my_ssid_name"
+     psk="my_password"
+    }
+
+then ensure that no one but root can read the contents:
+
+    chmod go-rwx /etc/wpa_supplicant.conf
+
+To assign a fixed IP address to always be returned by the router's DHCP
+server, get the Wifi MAC address using `ifconfig wlan0`, then in the
+router, manually assign a fixed IP address.
+
+
+### Configure sendmail
+
+By default, sendmail operates localhost only. If you disable it, you'll
+need to enable an alternative mail handler since the system assumes mail
+is available.
+
+Given that we generally want to disable root login on all hosts, it's
+useful to forward root's mail to a local user. To do so:
+
+1. Edit `/etc/mail/aliases`. Forward root's mail to a local user (e.g.
+   `chris`) or a domain-qualified email address such as
+   `chris@bracken.jp`.
+2. Run `newaliases` to rebuild the random-access database populated from
+   `/etc/mail/aliases`. This is exactly the same as `sendmail -bi`.
+
+See https://www.freebsd.org/doc/handbook/sendmail.html for details.
+
+
+### Set the console font
 
 To list available fonts, run `vidfont`, an ncurses-based program that
 sets the font to something legible when running. When it exits, it'll
@@ -149,129 +154,102 @@ A couple reference articles relating to framebuffer console fonts:
 * [Japanese](https://www.next-hop.net/~hiraga/FreeBSD/japanese-vt.shtml)
 
 
-Using a serial cable
---------------------
+Reboot the machine
+------------------
 
-FreeBSD includes built-in support for various UART serial cables
-including the Prolific PL-2303 and FTDI cables. Connecting the cable
-will create three character devices named `ttyUN`, `ttyUN.init`, and
-`ttyUN.lock` in the dev filesystem.
-
-* `ttyUN` is the serial device.
-* `ttyUN.init` is an initialisation device used to initialise
-  communication port parameters each time a port is opened, such as
-  `crtscts` for modems which use `RTS/CTS` signalling for flow control.
-* `ttyUN.lock` is used to lock flags on ports to prevent users or
-  programs from changing certain parameters. See the man pages for
-  `termios`, `sio`, and `stty` for information on terminal settings,
-  locking and initialising devices, and setting terminal options,
-  respectively.
-
-More info on serial port configuration can be found in the FreeBSD
-Handbook:
-
-* [25.2 USB Virtual Serial Ports](https://www.freebsd.org/doc/handbook/usb-device-mode-terminals.html)
-* [26.2 Serial Terminology and Hardware](https://www.freebsd.org/doc/handbook/serial.html)
-
-To connect to the serial line, use the `cu` command:
-
-    cu -l /dev/ttyU0 -s 115200
-
-To disconnect the serial session, type `~.` from within `cu`.
+Once the above steps are done, run exit the shell and select to end the
+installation and reboot.
 
 
-Installing on a new machine
----------------------------
+Install initial packages
+------------------------
 
-### Configure machine
+Install general packages:
 
-1. When adding the first user, when prompted for additional groups in
-   addition to their own group add them to `wheel`.
-1. Set domain-qualified hostname in `/etc/rc.conf`.
-1. Update `/etc/hosts` to use domain name. Add raw hostname and
-   domain-qualified hostname after localhost entries.
-1. Set the console font in `/etc/rc.conf` (see section above).
+1. `pkg update -f`
+2. Install sudo: `pkg install sudo`
+4. Install zsh: `pkg install zsh`
+5. Install zsh: `pkg install bash`
+6. Install vim: `pkg install vim-console`
+1. Install tmux: `pkg install tmux`
 
-### Install packages
-
-1. Run `pkg install sudo` to install sudo.
-1. Run `pkg install vim-console` to install vim.
-1. Run `pkg install zsh` to install zsh.
-1. Run `pkg install tmux` to install tmux.
-1. Run `pkg install git` to install git.
-1. Run `pkg install tig` to install tig (interactive git tool).
-1. Run `pkg install w3m` to install w3m browser.
+Install mutt email support:
 1. Run `pkg install mutt` to install mutt email client.
-1. Run `pkg install notmuch` to install notmuch email indexer.
-1. Run `pkg install isync` to install email syncing.
-1. Run `pkg install msmtp` to install an SMTP plugin mutt can use.
+2. Run `pkg install notmuch` to install notmuch email indexer.
+3. Run `pkg install isync` to install email syncing.
+4. Run `pkg install msmtp` to install an SMTP plugin mutt can use.
+5. Run `pkg install w3m` to install w3m browser.
 
-### Set up sudo
+
+Install developer packages:
+
+1. Install git: `pkg install git` (agree to install all)
+2. Install tig: `pkg install tig`
+3. Install python: `pkg install python3 python`
+4. Install go: `pkg install go`
+5. Install nasm: `pkg install nasm`
+6. Install bazel: `pkg install bazel` (note: requires `bash` at runtime)
+7. Install gn: `pkg install gn`
+8. Install ninja: `pkg install ninja`
+9. Install cscope: `pkg install cscope`
+
+
+Set up sudo
+-----------
 
 1. Edit `/usr/local/sudoers` and uncomment the following line to enable
    sudo access for members of the `wheel` group:
-   ```
-   %wheel ALL=(ALL) ALL
-   ```
+
+        %wheel ALL=(ALL) ALL
+
 1. Disable direct root login by editing the passwd file using the `vipw`
    command. Find the row starting with `root:` and replace the hashed
    password between the first and second colons on that line with `*`.
    The line should look something like:
-   ```
-   root:*:0:0::0:0:Charlie &:/root:/bin/csh
-   ```
+
+        root:*:0:0::0:0:Charlie &:/root:/bin/csh
+
 1. Type `:wq` to save and exit.
 
-### Local email setup
+Now that sudo is set up, log in as a user in the `wheel` group on
+another console (Use Ctrl-Alt-F1 through F8 to switch ttys) and run
+`sudo ls /root` to verify everything is configured properly, then exit
+the root shell and continue all further steps as a user in the `wheel`
+group.
 
-By default, sendmail operates localhost only. If you disable it, you'll
-need to enable an alternative mail handler since the system assumes mail
-is available.
 
-Given that we generally want to disable root login on all hosts, it's
-useful to forward root's mail to a local user. To do so:
+Configure sshd
+--------------
 
-1. Edit `/etc/mail/aliases`. Forward root's mail to a local user (e.g.
-   `chris`) or a domain-qualified email address such as
-   `chris@bracken.jp`.
-2. Run `sudo newaliases` to rebuild the random-access database populated
-   from `/etc/mail/aliases`. This is exactly the same as `sudo sendmail
-   -bi`.
+Edit `/etc/ssh/sshd_config` and uncomment or edit each of the following
+lines to disable password-based logins and allow only key-based
+authentication:
 
-### Configure sshd
+    PasswordAuthentication no
+    ChallengeResponseAuthentication no
+    PubkeyAuthentication yes
 
-1. Edit `/etc/ssh/sshd_config` and uncomment:
-   ```
-   PasswordAuthentication no
-   ```
-   then change `no` to `yes`.
-1. Edit `/etc/rc.conf` to add:
-   ```
-   sshd_enable="YES"
-   ```
-1. Start the sshd server:
-   ```
-   sudo service sshd start
-   ```
-1. Connect to the host via ssh from another machine:
-   ```
-   ssh myhost
-   ```
-1. Copy your existing public key into `~/.ssh/authorized_keys` on the
-   new machine -- e.g. on the new host: `cat > ~/.ssh/authorized_keys`.
-   Then paste the public key you want to use to log in, and type ctrl-d
-   to save. You can find your public key in `~/.ssh/id_rsa.pub` on the
-   existing host you want to connect from.
-1. Edit `/etc/ssh/sshd_config` to disable password-based authentication,
-   and allow only key-based authentication by setting
-   `PasswordAuthentication` and `ChallengeResponseAuthentication` to
-   `no`.
-1. Restart the sshd server to pick up the config change.
-   ```
-   sudo service sshd restart
-   ```
+Edit `/etc/rc.conf` to add:
 
-### Configure audio
+    sshd_enable="YES"
+
+Start the sshd server:
+
+    sudo service sshd start
+
+Connect to the host via ssh from another machine:
+
+    ssh myhost
+
+Copy any existing public key you want to be able to log in into
+`~/.ssh/authorized_keys` on the new machine -- e.g. on the new host:
+`cat > ~/.ssh/authorized_keys`. Then paste the public key you want to
+use to log in, and type ctrl-d to save.  You can find your public key in
+`~/.ssh/id_rsa.pub` on the existing host you want to connect from.
+
+
+Configure audio
+---------------
 
 We'll want some mechanism for managing audio volume. The `alsa-utils`
 package includes `amixer` which does the trick:
@@ -285,7 +263,8 @@ We may also want to disable the PC speaker and its annoying beep. Edit
     kern.vt.enable_bell=0
 
 
-### NVIDIA drivers
+Set up NVIDIA drivers
+---------------------
 
 For systems with an NVIDIA card, we'll install the drivers, configure
 them to load at boot, and add X11 config.
@@ -316,7 +295,21 @@ Finally, reboot the system or run `kldload nvidia-modeset` to manually
 load the driver.
 
 
-### Configure XWindows
+Change shell to zsh
+-------------------
+
+Log in as your user:
+
+1. `chsh -s /usr/local/bin/zsh`
+2. `exit`
+
+Log in as user again:
+
+1. `ssh-keygen -t rsa -b 4096 -C "chris@bracken.jp (hostname)"`
+
+
+Configure XWindows
+------------------
 
 To install XWindows with the i3 window manager and compton compositor:
 
@@ -363,28 +356,10 @@ Install firefox:
 Reboot the system and attempt to run `startx`.
 
 
-### Japanese input on the virtual console
+Configure Japanese input
+------------------------
 
-Download Japanese fonts:
-
-    fetch http://people.freebsd.org/~emaste/newcons/b16.fnt
-    fetch http://www.wheel.gr.jp/~dai/fonts/jiskan16u.fnt
-    fetch http://www.wheel.gr.jp/~dai/fonts/jiskan16s.fnt
-    fetch http://www.wheel.gr.jp/~dai/fonts/unifont-8.0.01.fnt
-
-Copy the fonts to a local font directory:
-
-    sudo mkdir /usr/local/share/fonts/vt
-    cp *.fnt /usr/local/share/fonts/vt
-
-You can convert BDF or HEX fonts to console `.fnt` files using the
-`vtfontcvt` command. See the `vtfontcvt` man page for details.
-
-Use the mechanism described (`vidfont` and `vidcontrol`) elsewhere in
-this document to set the font.
-
-
-### Japanese input in XWindows
+### XWindows
 
 Setting Japanese keyboard layout with caps-lock as control:
 
@@ -413,6 +388,27 @@ steps above or manually starting it via `service dbus start` before
 running `startx`.
 
 
+### Virtual console
+
+Download Japanese fonts:
+
+    fetch http://people.freebsd.org/~emaste/newcons/b16.fnt
+    fetch http://www.wheel.gr.jp/~dai/fonts/jiskan16u.fnt
+    fetch http://www.wheel.gr.jp/~dai/fonts/jiskan16s.fnt
+    fetch http://www.wheel.gr.jp/~dai/fonts/unifont-8.0.01.fnt
+
+Copy the fonts to a local font directory:
+
+    sudo mkdir /usr/local/share/fonts/vt
+    cp *.fnt /usr/local/share/fonts/vt
+
+You can convert BDF or HEX fonts to console `.fnt` files using the
+`vtfontcvt` command. See the `vtfontcvt` man page for details.
+
+Use the mechanism described (`vidfont` and `vidcontrol`) elsewhere in
+this document to set the font.
+
+
 Editing kernel sources
 ----------------------
 
@@ -425,6 +421,37 @@ When editing kernel sources in vim, the indentation settings should be:
     set shiftwidth=4    " Number of spaces for each step of autoindent
     set softtabstop=4   " Number of spaces a tab counts for when editing
     set noexpandtab     " Use tabs rather than spaces
+
+
+Using a serial cable
+--------------------
+
+FreeBSD includes built-in support for various UART serial cables
+including the Prolific PL-2303 and FTDI cables. Connecting the cable
+will create three character devices named `ttyUN`, `ttyUN.init`, and
+`ttyUN.lock` in the dev filesystem.
+
+* `ttyUN` is the serial device.
+* `ttyUN.init` is an initialisation device used to initialise
+  communication port parameters each time a port is opened, such as
+  `crtscts` for modems which use `RTS/CTS` signalling for flow control.
+* `ttyUN.lock` is used to lock flags on ports to prevent users or
+  programs from changing certain parameters. See the man pages for
+  `termios`, `sio`, and `stty` for information on terminal settings,
+  locking and initialising devices, and setting terminal options,
+  respectively.
+
+More info on serial port configuration can be found in the FreeBSD
+Handbook:
+
+* [25.2 USB Virtual Serial Ports](https://www.freebsd.org/doc/handbook/usb-device-mode-terminals.html)
+* [26.2 Serial Terminology and Hardware](https://www.freebsd.org/doc/handbook/serial.html)
+
+To connect to the serial line, use the `cu` command:
+
+    cu -l /dev/ttyU0 -s 115200
+
+To disconnect the serial session, type `~.` from within `cu`.
 
 
 Troubleshooting
