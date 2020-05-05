@@ -307,9 +307,15 @@ Install XWindows:
 
     sudo install xorg
 
-Install the i3 window manager compositor:
+Install the i3 window manager:
 
-    sudo install i3 i3status i3lock dmenu xautolock
+    sudo install i3        \  # window manager
+                 i3status  \  # status bar
+                 i3lock    \  # lock screen
+                 dmenu     \  # app launcher
+                 xautolock \  # lock screen timeout manager
+                 sxiv      \  # image viewer
+                 xpdf         # PDF viewer
 
 Install dunst for notifications:
 
