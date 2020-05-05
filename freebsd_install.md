@@ -433,6 +433,23 @@ steps above or manually starting it via `service dbus start` before
 running `startx`. For reference, ibus stores its config in binary format
 using `dconf`. The config can be found in `~/.config/dconf/user`.
 
+It's worth noting that the Japanese input method for ibus doesn't appear
+to support the AltGr compose key. The simplest option is to add a second
+input method in ibus, but as far as I'm aware, there's no Japanese
+keyboard layout that also supports the compose key (known as `Multi_Key`
+to X). You can map the right Alt key using setxkbmap:
+
+    setxkbmap -layout jp -option ctrl:nocaps -option compose:ralt
+
+however, the key is still ignored in ibus Japanese input modes. The best
+option is probably create a new English layout that's just a copy of the
+Japanese keyboard layout with the right Alt key mapped to Compose. ibus
+seems to keep its keymaps under /usr/local/share/ibus/keymaps, xkb seems
+to keep them under /usr/local/share/X11/xkb.
+
+Some relevant notes on ibus + compose interaction here:
+https://girinstud.io/news/2018/02/ibus-hangul-and-compose-key-the-incredible-journey-of-a-simple-patch/
+
 
 ### Virtual console
 
