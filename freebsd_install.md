@@ -33,7 +33,7 @@ Once these steps are done, select the option to drop into a console
 session to complete a few additional steps.
 
 
-### Set the keyboard layout
+### Set the console keyboard layout
 
 The console keyboard layout can be temporarily changed using the
 `kbdcontrol` command:
@@ -47,16 +47,6 @@ It can be permanently set by adding a line to `/etc/rc.conf`:
 For US keyboard layout with Caps Lock as Control, use `us.ctrl` for a
 Japanese keyboard with Caps Lock as Control, use `jp.capsctrl`. You can
 find all layouts in the `/usr/share/vt/keymaps` directory.
-
-In XWindows, the keyboard can be set using `setxkbmap`:
-
-    setxkbmap jp
-
-It can be permanently set by adding the above line to `.xinitrc`.
-
-To map Caps Lock into a control key:
-
-    setxkbmap -option ctrl:nocaps
 
 
 ### Configure the hostname
@@ -311,15 +301,17 @@ Log in as user again:
 Configure XWindows
 ------------------
 
+### Install Xorg, WM, and apps
+
 Install XWindows:
 
     sudo install xorg
 
-Install  with the i3 window manager and compton compositor:
+Install the i3 window manager compositor:
 
     sudo install i3 i3status i3lock dmenu xautolock
 
-Optionally install compton compositor:
+Optionally, install compton compositor:
 
     sudo install compton
 
@@ -330,6 +322,25 @@ Install urxvt terminal:
 Install flameshot screenshotting tool:
 
     sudo install flameshot
+
+Install fonts:
+
+    sudo pkg install webfonts
+    sudo pkg install twemoji-color-font-ttf
+    sudo pkg install noto-basic
+    sudo pkg install noto-jp
+    sudo pkg install ja-font-ipa ja-font-ipa-uigothic ja-font-ipaex
+
+Then refresh the font cache:
+
+    fc-cache -f
+
+Install Firefox web browser:
+
+    sudo pkg install firefox
+
+
+### Configure X
 
 Add the following line to `/etc/rc.conf`:
 
@@ -352,6 +363,22 @@ In some instances, this seems to result in a kernel panic. If that
 happens, install DRM from the `graphics/drm-kmod` port in the ports
 tree.
 
+
+### Configure keyboard layout
+
+In XWindows, the keyboard can be set using `setxkbmap`:
+
+    setxkbmap jp
+
+It can be permanently set by adding the above line to `.xinitrc`.
+
+To map Caps Lock into a control key:
+
+    setxkbmap -option ctrl:nocaps
+
+
+### Configure mouse
+
 To configure natural scrolling, create the file
 `/usr/local/etc/X11/xorg.conf.d/mouse.conf` with the following contents:
 
@@ -364,20 +391,8 @@ To configure natural scrolling, create the file
       Option "ZAxisMapping" "4 5"
     EndSection
 
-Install fonts:
 
-    sudo pkg install webfonts
-    sudo pkg install noto-basic
-    sudo pkg install noto-jp
-    sudo pkg install ja-font-ipa ja-font-ipa-uigothic ja-font-ipaex
-
-Then refresh the font cache:
-
-    fc-cache -f
-
-Install Firefox:
-
-    sudo pkg install firefox
+### Reboot
 
 Reboot the system and attempt to run `startx`.
 
@@ -411,7 +426,8 @@ add *Japanese* and *Mozc*. Remove US keyboard if present (unless you're
 using a US keyboard). Note that when you do this step, dbus will need to
 be running; this involves either a reboot after the XWindows config
 steps above or manually starting it via `service dbus start` before
-running `startx`.
+running `startx`. For reference, ibus stores its config in binary format
+using `dconf`. The config can be found in `~/.config/dconf/user`.
 
 
 ### Virtual console
