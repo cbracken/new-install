@@ -311,11 +311,25 @@ Log in as user again:
 Configure XWindows
 ------------------
 
-To install XWindows with the i3 window manager and compton compositor:
+Install XWindows:
 
     sudo install xorg
-    sudo install i3 i3status i3lock dmenu compton xautolock
+
+Install  with the i3 window manager and compton compositor:
+
+    sudo install i3 i3status i3lock dmenu xautolock
+
+Optionally install compton compositor:
+
+    sudo install compton
+
+Install urxvt terminal:
+
     sudo install rxvt-unicode
+
+Install flameshot screenshotting tool:
+
+    sudo install flameshot
 
 Add the following line to `/etc/rc.conf`:
 
