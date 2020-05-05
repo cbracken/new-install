@@ -106,7 +106,7 @@ then ensure that no one but root can read the contents:
     chmod go-rwx /etc/wpa_supplicant.conf
 
 To assign a fixed IP address to always be returned by the router's DHCP
-server, get the Wifi MAC address using `ifconfig wlan0`, then in the
+server, get the WiFi MAC address using `ifconfig wlan0`, then in the
 router, manually assign a fixed IP address.
 
 
@@ -375,7 +375,7 @@ Then refresh the font cache:
 
     fc-cache -f
 
-Install firefox:
+Install Firefox:
 
     sudo pkg install firefox
 
@@ -549,7 +549,7 @@ Intel NUC6i3SYK devices give a repeating error on startup:
 and dumps registers. It seems like there's an issue with support for the
 NUC's SD card reader. After a couple minutes, eventually it gives up and
 continues.  To eliminate the warning on startup, reboot and enter the
-BIOS by holding down F2, then disable the SD coard reader in the
+BIOS by holding down F2, then disable the SD card reader in the
 *Devices* section of the *Advanced* options.
 
 Alternatively, edit `/boot/loader.conf` to contain:
@@ -566,7 +566,7 @@ If that doesn't work, edit `/boot/device.hints` to contain:
 Mostly from notes in FreeBSD [Bugzilla issue
 237083](https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=237038).
 
-The NUC's Intel 8260 bluetooth/wireless requires a custom firmware
+The NUC's Intel 8260 Bluetooth/wireless requires a custom firmware
 download.  FreeBSD 12.0 doesn't ship with all the support needed for
 this chipset. Fixes were landed in July 2019, but will take time to get
 released.
@@ -600,7 +600,7 @@ service with:
 
     sudo service start bluetooth ubt0
 
-To list the attached bluetooth nodes, try:
+To list the attached Bluetooth nodes, try:
 
     sudo ngctl list
 
