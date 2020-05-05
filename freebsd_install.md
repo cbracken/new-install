@@ -311,6 +311,10 @@ Install the i3 window manager compositor:
 
     sudo install i3 i3status i3lock dmenu xautolock
 
+Install dunst for notifications:
+
+    sudo install dunst
+
 Optionally, install compton compositor:
 
     sudo install compton
