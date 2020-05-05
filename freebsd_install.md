@@ -314,7 +314,7 @@ Configure XWindows
 To install XWindows with the i3 window manager and compton compositor:
 
     sudo install xorg
-    sudo install i3 i3status i3lock dmenu compton
+    sudo install i3 i3status i3lock dmenu compton xautolock
     sudo install rxvt-unicode
 
 Add the following line to `/etc/rc.conf`:
