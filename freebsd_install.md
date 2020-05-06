@@ -159,7 +159,7 @@ Install general packages:
 1. `pkg update -f`
 2. Install sudo: `pkg install sudo`
 4. Install zsh: `pkg install zsh`
-5. Install zsh: `pkg install bash`
+5. Install bash: `pkg install bash` (only required for bazel)
 6. Install vim: `pkg install vim-console`
 1. Install tmux: `pkg install tmux`
 
