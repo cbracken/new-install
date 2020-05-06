@@ -183,6 +183,7 @@ Install developer packages:
 7. Install gn: `pkg install gn`
 8. Install ninja: `pkg install ninja`
 9. Install cscope: `pkg install cscope`
+7. Install cmake: `pkg install cmake`
 
 
 Set up sudo
