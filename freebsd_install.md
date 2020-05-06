@@ -165,10 +165,11 @@ Install general packages:
 
 Install mutt email support:
 1. Run `pkg install mutt` to install mutt email client.
-2. Run `pkg install notmuch` to install notmuch email indexer.
-3. Run `pkg install isync` to install email syncing.
-4. Run `pkg install msmtp` to install an SMTP plugin mutt can use.
-5. Run `pkg install w3m` to install w3m browser.
+2. Run `pkg install abook` to install address book.
+3. Run `pkg install notmuch` to install notmuch email indexer.
+4. Run `pkg install isync` to install email syncing.
+5. Run `pkg install msmtp` to install an SMTP plugin mutt can use.
+6. Run `pkg install w3m` to install w3m browser.
 
 
 Install developer packages:
