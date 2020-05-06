@@ -185,6 +185,10 @@ Install developer packages:
 9. Install cscope: `pkg install cscope`
 7. Install cmake: `pkg install cmake`
 
+Install static web site support:
+
+1. Install gohugo: `pkg install gohugo`
+
 
 Set up sudo
 -----------
