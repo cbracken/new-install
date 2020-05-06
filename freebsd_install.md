@@ -353,7 +353,8 @@ Then refresh the font cache:
 
 Install Firefox web browser:
 
-    sudo pkg install firefox
+    sudo pkg install firefox   # browser
+    sudo pkg install openh264  # H264 video plugin
 
 
 ### Configure X
