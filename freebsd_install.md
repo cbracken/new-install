@@ -569,7 +569,7 @@ required to fix your mistakes. Finally, reboot.
 
 ### Force renew DHCP lease
 
-DHCP leases are cached in /var/db/dhclient.leases.em0 (remplace `em0`
+DHCP leases are cached in /var/db/dhclient.leases.em0 (replace `em0`
 with the interface name).
 
 To force renewal of DHCP lease:
