@@ -485,6 +485,119 @@ Use the mechanism described (`vidfont` and `vidcontrol`) elsewhere in
 this document to set the font.
 
 
+Optionally set up pf firewall
+------------------------------
+
+Canonical reference in the FreeBSD Handbook:
+https://www.freebsd.org/doc/handbook/firewalls-pf.html
+
+An excellent tutorial on the OpenBSD packet filter:
+https://home.nuug.no/~peter/pf/en/
+
+Another decent starter reference: http://srobb.net/pf.html
+
+
+### Enable pf
+
+We'll need to populate `/etc/pf.conf`. A minimal config file that blocks
+all incoming connections other than SSH (port 22):
+
+    # Our external-facing network interface.
+    ext_if="em0"
+
+    # Block spoofed IP addresses on em0.
+    antispoof for $ext_if
+
+    # Allow all connections over loopback.
+    # "quick" means if rule is matched, stop processing here.
+    pass quick on lo0 all
+
+    # Block all incoming connections.
+    block in all
+
+    # Allow incoming SSH connections.
+    pass in proto tcp to port 22
+
+    # Allow all outgoing connections.
+    pass out all keep state
+
+To run a check on our config file without yet applying it:
+
+    pfctl -nvf /etc/pf.conf
+
+Next, we'll start `pf`, but since many a system administrator has found
+themselves locked out of their own server by applying a bad config, it's
+useful to queue up a command to disable the firewall after two minutes.
+In another terminal, log into the remote machine, get a root shell using
+`sudo -s`, then run the following:
+
+    # Sleep 2 minutes, then disable pf.
+    sleep 120; pfctl -d
+
+Then, before the two minutes is up, run these commands in another
+terminal to start the firewall:
+
+    # Load the pf kernel module.
+    sudo kldload pf
+
+    # Enable pf.
+    sudo pfctl -e
+
+It's likely your SSH sessions will hang when you enable the packet
+filter. Quickly try connecting via SSH to verify you can connect before
+the two minute timeout above expires. If it worked, re-enable the packet
+filter on the server using `sudo pfctl -e`.
+
+Once everything checks out, enable the packet filter on startup by
+adding the following lines to `/etc/rc.conf`:
+
+    pf_enable="YES"
+    pflog_enable="YES"
+
+
+### Reading pf logs
+
+To read the pf logs, run:
+
+    sudo tcpdump -netttr /var/log/pflog
+
+
+### Enabling blacklistd
+
+Canonical reference in the FreeBSD Handbook:
+https://www.freebsd.org/doc/handbook/firewalls-blacklistd.html
+
+If you've got an external-facing SSH port, you'll be continuously
+spammed with bogus connection attempts from people attempting to get
+access to badly-configured machines. The less clever of these tend to
+attack your machine repeatedly from the same IP address. FreeBSD
+includes the `blacklistd` service which can be used to temporarily ban
+IP addresses after repeated failed connection attempts.
+
+First, we'll add a pf anchor for blacklistd blocks in `/etc/pf.conf`:
+
+    anchor "blacklistd/*" in on $ext_if
+
+Next we'll enable it on boot. Add the following line to `/etc/rc.conf`:
+
+    blacklistd_enable="YES"
+
+Nest, start the blacklistd service:
+
+    sudo service blacklistd start
+
+Finally, we'll enable blacklist support in sshd. Edit
+`/etc/ssh/sshd_config` and uncomment the line:
+
+    UseBlacklist yes
+
+Then we'll restart sshd:
+
+    sudo service sshd restart
+
+at this point, everything should be up and running.
+
+
 Editing kernel sources
 ----------------------
 
