@@ -171,6 +171,8 @@ Install mutt email support:
 5. Run `pkg install msmtp` to install an SMTP plugin mutt can use.
 6. Run `pkg install w3m` to install w3m browser.
 
+Install newsreader support:
+1. Install newsboat: `pkg install newsboat`
 
 Install developer packages:
 
