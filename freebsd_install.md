@@ -185,7 +185,8 @@ Install developer packages:
 7. Install gn: `pkg install gn`
 8. Install ninja: `pkg install ninja`
 9. Install cscope: `pkg install cscope`
-7. Install cmake: `pkg install cmake`
+10. Install meson: `pkg install meson`
+11. Install cmake: `pkg install cmake`
 
 Install static web site support:
 
