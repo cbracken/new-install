@@ -139,10 +139,9 @@ large screen, `vgarom-8x14` or `vgarom-8x16` might be better.
 
 A couple reference articles relating to framebuffer console fonts:
 
-* [General](https://lists.freebsd.org/pipermail/freebsd-questions/2018-February/281063.html)
-* [Japanese](http://www.lufimia.net/cal/workstation/index.htm)
-* [Japanese](https://www.next-hop.net/~hiraga/FreeBSD/japanese-vt.shtml)
-
+* [How to change console font type and size](https://lists.freebsd.org/pipermail/freebsd-questions/2018-February/281063.html)
+* [CLI・CUIなワークステーションを作る](http://www.lufimia.net/cal/workstation/index.htm)
+* [FreeBSDで日本語コンソールvtを使う](https://www.next-hop.net/~hiraga/FreeBSD/japanese-vt.shtml)
 
 Reboot the machine
 ------------------
