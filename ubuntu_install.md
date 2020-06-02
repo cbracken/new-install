@@ -56,6 +56,19 @@ Next we'll purge any leftover config files from any removed packages:
     dpkg -l | grep '^rc '| awk '{print $2}' | xargs sudo dpkg -P
 
 
+Disable password/challenge-response ssh
+---------------------------------------
+
+Edit `/etc/ssh/sshd_config` to set the following:
+
+    PasswordAuthentication no
+    ChallengeResponseAuthentication no
+
+Then restart sshd with:
+
+    sudo systemctl restart ssh
+
+
 Configure the system
 --------------------
 
