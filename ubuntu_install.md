@@ -319,3 +319,25 @@ unzip installed too:
 Bazel also likely wants gcc and g++ installed:
 
     sudo apt install gcc g++ gdb
+
+Troubleshooting
+---------------
+
+### multipathd
+
+If you're seeing a lot of errors of the sort:
+
+    Jun  2 21:06:10 hostname multipathd[687]: sda: add missing path
+    Jun  2 21:06:10 hostname multipathd[687]: sda: failed to get udev uid: Invalid argument
+    Jun  2 21:06:10 hostname multipathd[687]: sda: failed to get sysfs uid: Invalid argument
+    Jun  2 21:06:10 hostname multipathd[687]: sda: failed to get sgio uid: No such file or directory
+
+Edit `/etc/multipath.conf` and add the following entry:
+
+    blacklist {
+        devnode "sda"
+    }
+
+Then restart `multipathd`:
+
+    sudo systemctl restart multipathd
