@@ -4,6 +4,8 @@ Alpine Linux
 Installation
 ------------
 
+To log in to the installer, use username 'root' with a blank password.
+
 For initial setup, run:
 
     setup-alpine
