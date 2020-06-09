@@ -51,6 +51,25 @@ Restart sshd:
 
     kill -HUP `cat /var/run/sshd.pid`
 
+If we're using DHCP to configure the network interface, dhclient
+requires a config file, but an empty file is sufficient. Without this,
+it appears to pick up a 6 month-long lease by default. One symptom of
+this is that routers will typically stop resolving the hostname (which
+is provided to the router in the DHCP lease request) if the device
+doesn't renew the lease before it's up:
+
+    touch /etc/dhclient.conf
+
+I generally leave a comment in the file along these lines:
+
+    #	This file is required by the ISC DHCP client.
+    #	See ``man 5 dhclient.conf'' for details.
+    #
+    #	In most cases an empty file is sufficient for most people as the
+    #	defaults are usually fine.
+    #
+    # See /etc/examples/dhclient.conf
+
 Configure basics
 ----------------
 
