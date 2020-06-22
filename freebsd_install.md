@@ -154,13 +154,16 @@ Install initial packages
 ------------------------
 
 Install general packages:
-
 1. `pkg update -f`
-2. Install sudo: `pkg install sudo`
-4. Install zsh: `pkg install zsh`
-5. Install bash: `pkg install bash` (only required for bazel)
-6. Install vim: `pkg install vim-console`
-1. Install tmux: `pkg install tmux`
+2. Install doas: `pkg install doas`
+3. Install zsh: `pkg install zsh`
+4. Install bash: `pkg install bash` (only required for bazel)
+5. Install vim: `pkg install vim-console`
+6. Install tmux: `pkg install tmux`
+
+For VMs running under XCP-NG:
+1. Install Xen guide utils: `pkg install xe-guest-utilities`
+2. In /etc/rc.conf, add: `xenguest_enable="YES"`
 
 Install mutt email support:
 1. Run `pkg install mutt` to install mutt email client.
@@ -174,7 +177,6 @@ Install newsreader support:
 1. Install newsboat: `pkg install newsboat`
 
 Install developer packages:
-
 1. Install git: `pkg install git` (agree to install all)
 2. Install tig: `pkg install tig`
 3. Install python: `pkg install python3 python`
@@ -188,15 +190,25 @@ Install developer packages:
 11. Install cmake: `pkg install cmake`
 
 Install static web site support:
-
 1. Install gohugo: `pkg install gohugo`
+
+
+Set up doas
+-----------
+
+Edit `/usr/local/etc/doas.conf` and add the following text:
+
+    permit nopass :wheel
+    permit :wheel cmd reboot
+    permit :wheel cmd shutdown
+    permit nopass keepenv root as root
 
 
 Set up sudo
 -----------
 
-1. Edit `/usr/local/sudoers` and uncomment the following line to enable
-   sudo access for members of the `wheel` group:
+1. Edit `/usr/local/etc/sudoers` and uncomment the following line to
+   enable sudo access for members of the `wheel` group:
 
         %wheel ALL=(ALL) ALL
 
