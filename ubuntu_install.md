@@ -80,6 +80,8 @@ Install languages we care about.
    sudo apt install language-pack-fr
    sudo apt install language-pack-ja
 
+Not doing this results in many tools emitting error messages and falling
+back to the "C" locale.
 
 ### Generate localisations
 
