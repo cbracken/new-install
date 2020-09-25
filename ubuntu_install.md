@@ -160,6 +160,31 @@ web browser, so next we'll get a window manager, terminal, and browser
 installed.
 
 
+### Install nvidia drivers if necessary
+
+On Debian systems, to install nvidia drivers, you'll first need to enable
+`contrib` and `non-free` package repositories. Edit `/etc/apt/sources.list`
+and patch the main distro soures to add those two repos.
+
+    deb http://deb.debian.org/debian/ buster main contrib non-free
+    deb-src http://deb.debian.org/debian/ buster main contrib non-free
+
+Once that's done, update the local package store.
+
+    sudo apt update
+
+Then install and run `nvidia-detect`.
+
+    sudo apt install nvidia-detect
+    sudo nvidia-detect
+
+This should detect your hardware and suggest next steps. Assuming it tells you to install `nvidia-driver`, do so now.
+
+    sudo apt install nvidia-driver
+
+You'll need to reboot at this point.
+
+
 Install the Sway window manager and useful apps
 -----------------------------------------------
 
