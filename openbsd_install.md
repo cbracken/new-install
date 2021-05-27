@@ -70,6 +70,34 @@ I generally leave a comment in the file along these lines:
     #
     # See /etc/examples/dhclient.conf
 
+If we're running in a VM under the Xen hypervisor, management support is built
+in to the OpenBSD kernel. It can be configured as documented in the `xen(4)`
+manpage. Edit `/etc/rc.local` and insert the following:
+
+    ostype=$(sysctl -n kern.ostype)
+    osrelease=$(sysctl -n kern.osrelease)
+
+    # XenServer Tools version
+    hostctl attr/PVAddons/MajorVersion 6
+    hostctl attr/PVAddons/MinorVersion 2
+    hostctl attr/PVAddons/MicroVersion 0
+    hostctl attr/PVAddons/BuildVersion 76888
+    hostctl attr/PVAddons/Installed 1
+
+    # OS version
+    hostctl data/os_name "$ostype $osrelease"
+    hostctl data/os_uname $osrelease
+    hostctl data/os_distro $ostype
+
+    # Update XenStore
+    hostctl data/updated 1
+
+You may also need to disable the 'viridian' capability, which is enabled by
+default in XenServer. We can disable that by running the following command on
+one of the Xen host machines:
+
+    xe vm-param-set uuid=<VM_UUID> platform:viridian=false
+
 Configure basics
 ----------------
 
