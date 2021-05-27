@@ -439,43 +439,24 @@ Setting Japanese keyboard layout with caps-lock as control:
 
 Installing mozc IME:
 
-    sudo install ja-ibus-mozc
+    sudo install ja-fcitx-mozc
 
 In `~/.xinitrc`, before launching i3, add:
 
     # Use fcitx for Japanese IME.
-    export GTK_IM_MODULE=ibus
-    export QT_IM_MODULE=ibus
-    export XMODIFIERS=@im=ibus
+    export GTK_IM_MODULE=fcitx
+    export QT_IM_MODULE=fcitx
+    export XMODIFIERS=@im=fcitx
 
-    # Start mozc engine and ibus IME.
+    # Start mozc engine and fcitx IME.
     /usr/local/bin/mozc start
-    ibus-daemon --xim &
+    /usr/local/bin/fcitx -d
 
-Configure ibus by running `ibus-setup`. Using the *Input Method* pane,
-add *Japanese* and *Mozc*. Remove US keyboard if present (unless you're
-using a US keyboard). Note that when you do this step, dbus will need to
-be running; this involves either a reboot after the XWindows config
-steps above or manually starting it via `service dbus start` before
-running `startx`. For reference, ibus stores its config in binary format
-using `dconf`. The config can be found in `~/.config/dconf/user`.
-
-It's worth noting that the Japanese input method for ibus doesn't appear
-to support the AltGr compose key. The simplest option is to add a second
-input method in ibus, but as far as I'm aware, there's no Japanese
-keyboard layout that also supports the compose key (known as `Multi_Key`
-to X). You can map the right Alt key using setxkbmap:
-
-    setxkbmap -layout jp -option ctrl:nocaps -option compose:ralt
-
-however, the key is still ignored in ibus Japanese input modes. The best
-option is probably create a new English layout that's just a copy of the
-Japanese keyboard layout with the right Alt key mapped to Compose. ibus
-seems to keep its keymaps under /usr/local/share/ibus/keymaps, xkb seems
-to keep them under /usr/local/share/X11/xkb.
-
-Some relevant notes on ibus + compose interaction here:
-https://girinstud.io/news/2018/02/ibus-hangul-and-compose-key-the-incredible-journey-of-a-simple-patch/
+Configure fcitx by running `fcitx-configtool`. Using the *Input Method* pane,
+add *Mozc*. Remove US keyboard if present (unless you're using a US keyboard).
+Note that when you do this step, dbus will need to be running; this involves
+either a reboot after the XWindows config steps above or manually starting it
+via `service dbus start` before running `startx`.
 
 
 ### Virtual console
