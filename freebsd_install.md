@@ -523,8 +523,8 @@ To run a check on our config file without yet applying it:
 Next, we'll start `pf`, but since many a system administrator has found
 themselves locked out of their own server by applying a bad config, it's
 useful to queue up a command to disable the firewall after two minutes.
-In another terminal, log into the remote machine, get a root shell using
-`sudo -s`, then run the following:
+In another terminal, log into the remote machine, get a *root* shell
+using `sudo -s`, then run the following:
 
     # Sleep 2 minutes, then disable pf.
     sleep 120; pfctl -d
@@ -573,9 +573,14 @@ First, we'll add a pf anchor for blacklistd blocks in `/etc/pf.conf`:
 
     anchor "blacklistd/*" in on $ext_if
 
-Next we'll enable it on boot. Add the following line to `/etc/rc.conf`:
+Next we'll enable it on boot. We start the daemon with the `-r` flag, which
+tells it to re-read the firewall rules from the internal database and remove
+then re-add them; this is useful for packet filters that don't retain state
+across restarts, though it's unclear to me whether this is the case for `pf`.
+Add following lines to `/etc/rc.conf`:
 
     blacklistd_enable="YES"
+    blacklistd_flags="-r"
 
 Nest, start the blacklistd service:
 
