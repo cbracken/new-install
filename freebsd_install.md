@@ -316,6 +316,49 @@ Log in as user again:
 1. `ssh-keygen -t rsa -b 4096 -C "chris@bracken.jp (hostname)"`
 
 
+Configure Wayland
+-----------------
+
+### Install WM and apps
+
+Add yourself to the `video` group:
+
+    pw groupmod video -m $USER
+
+Install the DRM kernel module:
+
+    pkg install drm-kmod
+
+Then, for Intel graphics, add the following line to `/etc/rc.conf`:
+
+    kld_list="i915kms"
+
+Install the sway window manager:
+
+    pkg install sway      \  # window manager
+                swaylock  \  # lock screen
+		swayidle  \  # idle manager
+		swaybg    \  # background screen
+		dmenu        # app launcher
+
+Install the alacritty terminal emulator:
+
+    pkg install alacritty
+
+Install fonts:
+
+    sudo pkg install webfonts
+    sudo pkg install twemoji-color-font-ttf
+    sudo pkg install noto-basic
+    sudo pkg install noto-jp
+    sudo pkg install ja-font-ipa ja-font-ipa-uigothic ja-font-ipaex
+
+Install Firefox web browser:
+
+    sudo pkg install firefox   # browser
+    sudo pkg install openh264  # H264 video plugin
+
+
 Configure XWindows
 ------------------
 
