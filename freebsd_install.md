@@ -261,16 +261,14 @@ use to log in, and type ctrl-d to save.  You can find your public key in
 Configure audio
 ---------------
 
-We'll want some mechanism for managing audio volume. The `alsa-utils`
-package includes `amixer` which does the trick:
-
-    sudo pkg install alsa-utils
-
-We may also want to disable the PC speaker and its annoying beep. Edit
+We may want to disable the PC speaker and its annoying beep. Edit
 `/etc/sysctl.conf` and add the following:
 
     # Disable the terminal bell.
     kern.vt.enable_bell=0
+
+Audio volumes themselves can be controlled via the `mixer` tool, which is part
+of the FreeBSD base install.
 
 
 Set up NVIDIA drivers
