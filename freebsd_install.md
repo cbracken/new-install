@@ -372,6 +372,10 @@ Install Firefox web browser:
     pkg install firefox   # browser
     pkg install openh264  # H264 video plugin
 
+Install the mpv video player:
+
+    pkg install mpv
+
 
 Configure XWindows
 ------------------
@@ -424,6 +428,10 @@ Install Firefox web browser:
 
     pkg install firefox   # browser
     pkg install openh264  # H264 video plugin
+
+Install the mpv video player:
+
+    pkg install mpv
 
 
 ### Configure X
