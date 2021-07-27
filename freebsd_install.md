@@ -207,6 +207,9 @@ Edit `/usr/local/etc/doas.conf` and add the following text:
 Set up sudo
 -----------
 
+Prefer installing `doas` as described above, but leaving instructions here for
+reference.
+
 1. Edit `/usr/local/etc/sudoers` and uncomment the following line to
    enable sudo access for members of the `wheel` group:
 
@@ -243,9 +246,9 @@ Edit `/etc/rc.conf` to add:
 
     sshd_enable="YES"
 
-Start the sshd server:
+As root, start the sshd server:
 
-    sudo service sshd start
+    service sshd start
 
 Connect to the host via ssh from another machine:
 
@@ -279,7 +282,7 @@ them to load at boot, and add X11 config.
 
 First install the drivers:
 
-    sudo pkg install nvidia-driver
+    pkg install nvidia-driver
 
 Next add the following line to `/boot/loader.conf`:
 
@@ -337,9 +340,20 @@ Install the sway window manager:
 
     pkg install sway      \  # window manager
                 swaylock  \  # lock screen
-		swayidle  \  # idle manager
-		swaybg    \  # background screen
-		dmenu        # app launcher
+		swayidle     \  # idle manager
+		swaybg       \  # background screen
+		dmenu        \  # app launcher
+		grim         \  # Wayland screenshot utility
+		slurp        \  # Select a region in Wayland
+		wl-clipboard \  # command-line interface to Wayland clipboard
+    jq           \  # command-line JSON parser
+    libnotify    \  # command-line notification sender (notify-send)
+    mako            # Notification daemon
+
+Screenshots use the `grimshot` utility that I've checked into my dotfiles repo.
+This can be found in the Sway repo `contrib` directory. This utility depends on
+the `grim`, `slurp`, `wl-clipboard`, `jq`, and `libnotify` packages listed
+above.
 
 Install the alacritty terminal emulator:
 
@@ -347,16 +361,16 @@ Install the alacritty terminal emulator:
 
 Install fonts:
 
-    sudo pkg install webfonts
-    sudo pkg install twemoji-color-font-ttf
-    sudo pkg install noto-basic
-    sudo pkg install noto-jp
-    sudo pkg install ja-font-ipa ja-font-ipa-uigothic ja-font-ipaex
+    pkg install webfonts
+    pkg install twemoji-color-font-ttf
+    pkg install noto-basic
+    pkg install noto-jp
+    pkg install ja-font-ipa ja-font-ipa-uigothic ja-font-ipaex
 
 Install Firefox web browser:
 
-    sudo pkg install firefox   # browser
-    sudo pkg install openh264  # H264 video plugin
+    pkg install firefox   # browser
+    pkg install openh264  # H264 video plugin
 
 
 Configure XWindows
@@ -366,11 +380,11 @@ Configure XWindows
 
 Install XWindows:
 
-    sudo install xorg
+    pkg install xorg
 
 Install the i3 window manager:
 
-    sudo install i3        \  # window manager
+    pkg install i3        \  # window manager
                  i3status  \  # status bar
                  i3lock    \  # lock screen
                  dmenu     \  # app launcher
@@ -380,27 +394,27 @@ Install the i3 window manager:
 
 Install dunst for notifications:
 
-    sudo install dunst
+    pkg install dunst
 
 Optionally, install compton compositor:
 
-    sudo install compton
+    pkg install compton
 
 Install urxvt terminal:
 
-    sudo install rxvt-unicode
+    pkg install rxvt-unicode
 
 Install flameshot screenshotting tool:
 
-    sudo install flameshot
+    pkg install flameshot
 
 Install fonts:
 
-    sudo pkg install webfonts
-    sudo pkg install twemoji-color-font-ttf
-    sudo pkg install noto-basic
-    sudo pkg install noto-jp
-    sudo pkg install ja-font-ipa ja-font-ipa-uigothic ja-font-ipaex
+    pkg install webfonts
+    pkg install twemoji-color-font-ttf
+    pkg install noto-basic
+    pkg install noto-jp
+    pkg install ja-font-ipa ja-font-ipa-uigothic ja-font-ipaex
 
 Then refresh the font cache:
 
@@ -408,8 +422,8 @@ Then refresh the font cache:
 
 Install Firefox web browser:
 
-    sudo pkg install firefox   # browser
-    sudo pkg install openh264  # H264 video plugin
+    pkg install firefox   # browser
+    pkg install openh264  # H264 video plugin
 
 
 ### Configure X
@@ -424,7 +438,7 @@ Add yourself to the `video` group:
 
 Install DRM kernel module:
 
-    sudo pkg install drm-fbsd12.0-kmod
+    pkg install drm-fbsd12.0-kmod
 
 Then set it to load at boot time by adding the following line to
 `/etc/rc.conf`:
@@ -472,6 +486,19 @@ Reboot the system and attempt to run `startx`.
 Configure Japanese input
 ------------------------
 
+### Wayland
+
+Install the fcitx input method with mozc:
+
+   pkg install ja-fcitx-mozc
+
+As root, generate a unique ID for this machine that will be written to
+`/var/lib/dbus/machine-id` for use by dbus, if the file doesn't yet exist and
+contain a UUID:
+
+   dbus-uuidgen --ensure
+
+
 ### XWindows
 
 Setting Japanese keyboard layout with caps-lock as control:
@@ -480,7 +507,7 @@ Setting Japanese keyboard layout with caps-lock as control:
 
 Installing mozc IME:
 
-    sudo install ja-fcitx-mozc
+    pkg install ja-fcitx-mozc
 
 In `~/.xinitrc`, before launching i3, add:
 
@@ -509,9 +536,9 @@ Download Japanese fonts:
     fetch http://www.wheel.gr.jp/~dai/fonts/jiskan16s.fnt
     fetch http://www.wheel.gr.jp/~dai/fonts/unifont-8.0.01.fnt
 
-Copy the fonts to a local font directory:
+As root, copy the fonts to a local font directory:
 
-    sudo mkdir /usr/local/share/fonts/vt
+    mkdir /usr/local/share/fonts/vt
     cp *.fnt /usr/local/share/fonts/vt
 
 You can convert BDF or HEX fonts to console `.fnt` files using the
@@ -565,24 +592,24 @@ Next, we'll start `pf`, but since many a system administrator has found
 themselves locked out of their own server by applying a bad config, it's
 useful to queue up a command to disable the firewall after two minutes.
 In another terminal, log into the remote machine, get a *root* shell
-using `sudo -s`, then run the following:
+using `doas -s`, then run the following:
 
     # Sleep 2 minutes, then disable pf.
     sleep 120; pfctl -d
 
 Then, before the two minutes is up, run these commands in another
-terminal to start the firewall:
+root terminal to start the firewall:
 
     # Load the pf kernel module.
-    sudo kldload pf
+    kldload pf
 
     # Enable pf.
-    sudo pfctl -e
+    pfctl -e
 
 It's likely your SSH sessions will hang when you enable the packet
 filter. Quickly try connecting via SSH to verify you can connect before
 the two minute timeout above expires. If it worked, re-enable the packet
-filter on the server using `sudo pfctl -e`.
+filter on the server using `pfctl -e`.
 
 Once everything checks out, enable the packet filter on startup by
 adding the following lines to `/etc/rc.conf`:
@@ -595,7 +622,7 @@ adding the following lines to `/etc/rc.conf`:
 
 To read the pf logs, run:
 
-    sudo tcpdump -netttr /var/log/pflog
+    tcpdump -netttr /var/log/pflog
 
 
 ### Enabling blacklistd
@@ -623,9 +650,9 @@ Add following lines to `/etc/rc.conf`:
     blacklistd_enable="YES"
     blacklistd_flags="-r"
 
-Nest, start the blacklistd service:
+Next, as root, start the blacklistd service:
 
-    sudo service blacklistd start
+    service blacklistd start
 
 Finally, we'll enable blacklist support in sshd. Edit
 `/etc/ssh/sshd_config` and uncomment the line:
@@ -634,7 +661,7 @@ Finally, we'll enable blacklist support in sshd. Edit
 
 Then we'll restart sshd:
 
-    sudo service sshd restart
+    service sshd restart
 
 at this point, everything should be up and running.
 
@@ -704,7 +731,7 @@ If you have the `XMODIFIERS` variable set but your IME isn't properly
 configured and running, you'll get a crash on keyboard input to dmenu.
 
 
-### Can't sudo or log in as root
+### Can't doas or log in as root
 
 Imagine you delete the root password via `vipw` without actually editing
 the `/usr/local/etc/sudoers` file first, or that you did edit that file
@@ -726,20 +753,20 @@ required to fix your mistakes. Finally, reboot.
 DHCP leases are cached in /var/db/dhclient.leases.em0 (replace `em0`
 with the interface name).
 
-To force renewal of DHCP lease:
+To force renewal of DHCP lease, run as root:
 
-    sudo service dhclient restart em0
+    service dhclient restart em0
 
 To manually unbind/remove an IP address from an interface:
 
-    sudo ifconfig em0 remove 192.168.1.x
+    ifconfig em0 remove 192.168.1.x
 
 
 ### Force NTP time sync
 
-To force sync the time on the host:
+To force sync the time on the host, run as root:
 
-    sudo ntpdate -v -b in.pool.ntp.org
+    ntpdate -v -b in.pool.ntp.org
 
 
 ### Intel NUC6i3SYK-specific issues
@@ -779,7 +806,7 @@ In the meantime, the firmware downloader can be found here:
 [](https://github.com/wulf7/iwmbt-firmware). Build the downloader:
 
     git clone git@github.com:wulf7/iwmbt-firmware
-    cd iwmbt-firmake
+    cd iwmbt-firmware
     make
 
 There's no need to install this, since it's a one-off tool to download
@@ -794,19 +821,19 @@ hardware state):
     	action "service bluetooth quietstart $device-name";
     };
 
-Next, to download the firmware, we run:
+Next, to download the firmware, we run as root:
 
-    sudo ./iwmbtfw
+    ./iwmbtfw
 
 This should get the download to happen, writing the firmware to
-`/usr/local/share/iwmbt-firmware/ibt-11-5.sfi`. You can then start the
+`/usr/local/share/iwmbt-firmware/ibt-11-5.sfi`. As root, you can then start the
 service with:
 
-    sudo service start bluetooth ubt0
+    service start bluetooth ubt0
 
 To list the attached Bluetooth nodes, try:
 
-    sudo ngctl list
+    ngctl list
 
 It should display something like:
 
