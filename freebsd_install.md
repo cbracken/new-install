@@ -165,6 +165,9 @@ For VMs running under XCP-NG:
 1. Install Xen guide utils: `pkg install xe-guest-utilities`
 2. In /etc/rc.conf, add: `xenguest_enable="YES"`
 
+Install file manager:
+1. Run `pkg install mc` to install midnight commander.
+
 Install mutt email support:
 1. Run `pkg install mutt` to install mutt email client.
 2. Run `pkg install abook` to install address book.
@@ -375,6 +378,10 @@ Install Firefox web browser:
 Install the mpv video player:
 
     pkg install mpv
+
+Install xdg-utils to get file associations to apps:
+
+    pkg install xdg-utils
 
 
 Configure XWindows
