@@ -284,6 +284,49 @@ The file contents should just contain the IPv4 and IPv6 entries for localhost:
     127.0.0.1	localhost
     ::1		localhost
 
+
+### Configure DHCP
+
+Arch, and most Linux distributions these days, use [systemd][systemd_guide] to
+manage running daemons and logging. Now would be a good time do read up on it.
+
+Install [dhcpcd][dhcpcd_guide]:
+
+    pacman -S dhcpcd
+    
+Edit the configuration in `/etc/dhcpcd.conf` to add the interface to configure at the top of the file:
+
+    interface eno1
+    
+Enable the service:
+
+    systemctl enable dhcpcd.service
+    
+    
+### Configure NTP
+
+Install [ntpd][ntpd_guide]:
+
+    pacman -S ntp
+    
+Then edit the `/etc/ntpd.conf`. It's recommended to add the `iburst` option at
+the end of every `server` line in the config file. This triggers a burst of
+packets only if it cannot obtain a connection on the first attempt. Do not use
+the `burst` option, which sends a burst of packets on _all_ attempts and can
+get you blacklisted.
+
+Finally, enable the service:
+
+    sudo systemctl enable ntpd.service
+
+
+Enable and start the NTP service:
+
+    sudo systemctl enable ntpd.service
+    sudo systemctl start ntpd.service
+
+
+
 ### Initramfs
 
 The initial ramdisk is a very small environment which loads various kernel
@@ -438,38 +481,6 @@ First, we install core packages we can't live without:
 
     sudo pacman -S man-db man-pages
     sudo pacman -S openssh
-
-
-### Configure DHCP
-
-Arch, and most Linux distributions these days, use [systemd][systemd_guide] to
-manage running daemons and logging. Now would be a good time do read up on it.
-
-First, we'll enable [dhcpcd][dhcpcd_guide], the system DHCP client:
-
-    sudo systemctl enable dhcpcd.service
-
-
-### Configure NTP
-
-To ensure the system clock remains synchronized to network time, we install
-the `ntp` network time daemon:
-
-    sudo pacman -S ntp
-
-Once installed, we edit the config file:
-
-    sudo vi /etc/ntpd.conf
-
-It's recommended to add the `iburst` option at the end of every `server` line
-in the config file. This triggers a burst of packets only if it cannot obtain a
-connection on the first attempt. Do not use the `burst` option, which sends a
-burst of packets on _all_ attempts and can get you blacklisted.
-
-Enable and start the NTP service:
-
-    sudo systemctl enable ntpd.service
-    sudo systemctl start ntpd.service
 
 
 ### Configure auto-mounting USB devices
@@ -647,6 +658,7 @@ These instructions are out-of-date and probably a bad idea:
 [lvm_guide]: https://wiki.archlinux.org/index.php/LVM
 [systemd_guide]: https://wiki.archlinux.org/index.php/Systemd
 [dhcpcd_guide]: https://wiki.archlinux.org/index.php/Dhcpcd
+[ntpd_guide]: https://wiki.archlinux.org/title/Network_Time_Protocol_daemon
 [mkinitcpio_guide]: https://wiki.archlinux.org/index.php/mkinitcpio
 [uefi_guide]: https://wiki.archlinux.org/index.php/Unified_Extensible_Firmware_Interface
 [cups_guide]: https://wiki.archlinux.org/index.php/CUPS
