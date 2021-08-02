@@ -366,8 +366,7 @@ Install fonts:
 
     pkg install webfonts
     pkg install twemoji-color-font-ttf
-    pkg install noto-basic
-    pkg install noto-jp
+    pkg install noto
     pkg install ja-font-ipa ja-font-ipa-uigothic ja-font-ipaex
 
 Install Firefox web browser:
@@ -423,8 +422,7 @@ Install fonts:
 
     pkg install webfonts
     pkg install twemoji-color-font-ttf
-    pkg install noto-basic
-    pkg install noto-jp
+    pkg install noto
     pkg install ja-font-ipa ja-font-ipa-uigothic ja-font-ipaex
 
 Then refresh the font cache:
