@@ -815,7 +815,9 @@ Mostly from notes in FreeBSD [Bugzilla issue
 The NUC's Intel 8260 Bluetooth/wireless requires a custom firmware
 download.  FreeBSD 12.0 doesn't ship with all the support needed for
 this chipset. Fixes were landed in July 2019, but will take time to get
-released.
+released. When it does, installation will be:
+
+    pkg install iwmbt-firmware
 
 In the meantime, the firmware downloader can be found here:
 [](https://github.com/wulf7/iwmbt-firmware). Build the downloader:
