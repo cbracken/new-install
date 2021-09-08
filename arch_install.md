@@ -624,12 +624,11 @@ Install notmuch for search/indexing:
 
 Install HTML-to-text support and URL handling:
 
-    pacman -S w3m urlview
+    pacman -S w3m urlscan
 
-Install offlineimap. I believe this is no longer recommended, and that people
-these days use imapsync, but here's the old command anyway:
+Install isync (also known as mbsync):
 
-    pacman -S offlineimap
+    pacman -S isync
 
 
 ### HP printer support
