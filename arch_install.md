@@ -317,13 +317,13 @@ get you blacklisted.
 
 Finally, enable the service:
 
-    sudo systemctl enable ntpd.service
+    systemctl enable ntpd.service
 
 
 Enable and start the NTP service:
 
-    sudo systemctl enable ntpd.service
-    sudo systemctl start ntpd.service
+    systemctl enable ntpd.service
+    systemctl start ntpd.service
 
 
 
