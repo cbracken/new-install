@@ -636,14 +636,6 @@ Start the CUPS printer daemon:
     doas hp-setup -i # PPD files under /usr/share/ppd/HP/
 
 
-### Install Gnome desktop environment
-
-See the [Gnome setup guide][gnome_guide] for details. Old instructions were:
-
-    sudo pacman -S gnome gdm gnome-tweak-tool seahorse
-    sudo systemctl enable gdm.service
-
-
 ### Install windows8 fonts
 
 See details in the [MS Fonts guide][ms_fonts_guide].
