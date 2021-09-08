@@ -524,7 +524,7 @@ For a GUI environment, we install Sway, an i3-like Wayland-based window manager:
 
     pacman -S sway swaylock swayidle dmenu    # Use noto fonts if prompted
     pacman -S xorg-server-xwayland xorg-xrdb  # Xwayland support
-    pacman -S rxvt-unicode                    # terminal
+    pacman -S alacritty                       # terminal
 
 Next, install some additional Western and Japanese fonts:
 
