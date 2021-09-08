@@ -538,9 +538,20 @@ Next, install some additional Western and Japanese fonts:
     pacman -S otf-ipafont
     pacman -S noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra
 
-Finally, we need a web browser:
+Add some media players:
+
+    pacman -S mpv
+    pacman -S cmus
+
+Add chat clients:
+
+    pacman -S signal-desktop
+    pacman -S weechat
+
+Add a couple of web browsers:
 
     pacman -S firefox
+    pacman -S lynx
 
 
 ### Audio
