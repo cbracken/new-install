@@ -506,6 +506,10 @@ Support for zip archives is handy:
 
     pacman -S zip unzip
 
+Core tooling:
+
+    pacman -S dnsutils
+
 Next, terminal multiplexing support via tmux:
 
     pacman -S tmux
