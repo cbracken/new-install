@@ -536,6 +536,7 @@ Next, install some additional Western and Japanese fonts:
     pacman -S adobe-source-serif-pro-fonts
     pacman -S adobe-source-han-sans-otc-fonts
     pacman -S otf-ipafont
+    pacman -S noto-fonts noto-fonts-cjk noto-fonts-emoji noto-fonts-extra
 
 Finally, we need a web browser:
 
