@@ -598,9 +598,14 @@ For the NUC8i5BEK, install:
 
 ### Install Japanese input support
 
-This needs to be updated for 2020.
+fcitx5 is the IME frontend for Japanese input, while mozc provides the candidate
+selection backend. Install all the required packags:
 
-    pacman -S mozc
+    pacman -S fcitx5-mozc fcitx5-configtool fcitx5-gtk
+
+Note that as of summer 2021, the Wayland IME protocol is still unstable. fcitx5
+only has partial integration with the sway window manager on Wayland. Under
+Xwayland, it works fine.
 
 
 ### Install mutt email client
