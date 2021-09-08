@@ -355,9 +355,9 @@ Next, we'll set the root password:
 
     passwd
 
-Once we've got `sudo` installed and an administrator user created, we'll
-disable the root account, but for now, we'll want to be able to log in as root
-to configure the system.
+Once we've got `doas` installed in a later step, and an administrator user
+created, we'll disable the root account, but for now, we'll want to be able to
+log in as root to configure the system.
 
 
 Install GRUB bootloader
@@ -446,41 +446,44 @@ Next, let's create a new user and set their password:
     passwd chris
 
 
-### Install sudo
+### Install doas
 
 For security reasons, we'd like to disable the root account and force all
-administrative actions to occur via the `sudo` command. First install it:
+administrative actions to occur via the `doas` command. First install it:
 
-    pacman -S sudo
+    pacman -S opendoas
 
-Then we edit `/etc/sudoers` and uncomment (or add) the following line:
+Then we edit `/etc/doas.conf` and uncomment (or add) the following line:
 
-    %wheel ALL=(ALL) ALL
+    permit nopass :wheel
+    permit :wheel cmd reboot
+    permit :wheel cmd shutdown
+    permit nopass keepenv root as root
 
 To verify this worked, log out of the root account, then log in as the admin
 user created in the previous step and verify they can issue commands with
-`sudo`.
+`doas`.
 
-    sudo ls /root
+    doas ls /root
 
 If that worked, lock-down the root account:
 
-    sudo passwd -l root
+    doas passwd -l root
 
 If you even need to unlock the root account, issue:
 
-    sudo passwd -u root
+    doas passwd -u root
 
 Now that the root account is disabled, the remainder of the steps should be
-executed via sudo from an admin user account.
+executed via doas from an admin user account.
 
 
 ### Install essential packages
 
 First, we install core packages we can't live without:
 
-    sudo pacman -S man-db man-pages
-    sudo pacman -S openssh
+    pacman -S man-db man-pages
+    pacman -S openssh
 
 
 ### Configure auto-mounting USB devices
@@ -488,8 +491,8 @@ First, we install core packages we can't live without:
 Next, we'll set up automounting USB disks. Since many of these are FAT32
 format, we'll also install tools for dealing with DOS partitions:
 
-    sudo pacman -S udisks2
-    sudo pacman -S dosfstools
+    pacman -S udisks2
+    pacman -S dosfstools
 
 
 ### Install useful packages
@@ -497,11 +500,11 @@ format, we'll also install tools for dealing with DOS partitions:
 Since `vim` is far nicer to work in than `ed`, `ex`, or `vim`, we'll install
 it first:
 
-    sudo pacman -S vim
+    pacman -S vim
 
 Support for zip archives is handy:
 
-    sudo pacman -S zip unzip
+    pacman -S zip unzip
 
 Next, terminal multiplexing support via tmux:
 
@@ -573,7 +576,7 @@ options:
 If you get a warning along the lines of "ERROR: Cannot find the fakeroot
 binary", install it via the following command:
 
-    sudo pacman -S fakeroot
+    pacman -S fakeroot
 
 Fakeroot is a tool that makes it easier to create tar archives, etc. containing
 files with root ownership, which would otherwise require root user privileges.
@@ -592,31 +595,31 @@ For the NUC8i5BEK, install:
 
 This needs to be updated for 2020.
 
-    sudo pacman -S mozc
+    pacman -S mozc
 
 
 ### Install mutt email client
 
 Install mutt:
 
-    sudo pacman -S mutt
+    pacman -S mutt
 
 Install msmtp for SMTP sending:
 
-    sudo pacman -S msmtp
+    pacman -S msmtp
 
 Install notmuch for search/indexing:
 
-    sudo pacman -S notmuch-mutt
+    pacman -S notmuch-mutt
 
 Install HTML-to-text support and URL handling:
 
-    sudo pacman -S w3m urlview
+    pacman -S w3m urlview
 
 Install offlineimap. I believe this is no longer recommended, and that people
 these days use imapsync, but here's the old command anyway:
 
-    sudo pacman -S offlineimap
+    pacman -S offlineimap
 
 
 ### HP printer support
@@ -624,13 +627,13 @@ these days use imapsync, but here's the old command anyway:
 Next, we'll configure [CUPS][cups_guide] printer support for HP printers,
 mostly since that's what I have.
 
-    sudo pacman -S cups hplip
-    sudo vi /etc/sane.d/dll.d/hpaio  # uncomment or add hpaio
+    pacman -S cups hplip
+    doas vi /etc/sane.d/dll.d/hpaio  # uncomment or add hpaio
 
 Start the CUPS printer daemon:
 
-    sudo systemctl enable org.cups.cupsd.service
-    sudo hp-setup -i # PPD files under /usr/share/ppd/HP/
+    doas systemctl enable org.cups.cupsd.service
+    doas hp-setup -i # PPD files under /usr/share/ppd/HP/
 
 
 ### Install Gnome desktop environment
